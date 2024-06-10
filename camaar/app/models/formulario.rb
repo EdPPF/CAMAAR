@@ -3,4 +3,5 @@ class Formulario < ApplicationRecord
   belongs_to :template
   has_one :respostas
   has_many :questaos
+  validates :nome , presence: true
 end
