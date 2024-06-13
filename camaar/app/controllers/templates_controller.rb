@@ -21,4 +21,24 @@ class TemplatesController < ApplicationController
   def edit
     @template = Template.find params[:id]
   end
+  def update
+    @template = Template.find params[:id]
+    if (@template.update_attributes(template_params))
+      redirect_to template_path(@template), :notice => "#{@template.title} updated."
+    else
+      flash[:alert] = "#{@template.title} could not be updated: " +
+        @template.errors.full_messages.join(",")
+      render 'edit'
+    end
+  end
+  def destroy
+    @template = Template.find(params[:id])
+    @template.destroy
+    redirect_to template_path, :notice => "#{@template.title} deleted."
+  end
+  private
+  def template_params
+    params.require(:template)
+    params[:template].permit(:nome)
+  end
 end
