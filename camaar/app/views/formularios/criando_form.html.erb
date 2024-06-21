@@ -1,0 +1,60 @@
+<% if current_user.admin? %>
+  <h2>Nome do Formulário</h2>
+  <%= form_tag formularios_path, method: :post, class: 'form' do %>
+    <%= label :formulario, :nome, 'Nome do formulário', class: 'form-control' %>
+    <%= text_field :template, :nome, class: 'form-control' %>
+    <%= submit_tag 'Salvar nome' %>
+  <% end %>
+
+  <h3>Escolha um Template</h3>
+  <ul id="template-list">
+    <% @templates.each do |template| %>
+      <li>
+        <%= link_to template.nome, '#', class: 'template-link', data: { template_id: template.id, template_name: template.nome } %>
+      </li>
+    <% end %>
+  </ul>
+
+  <div id="selected-template">
+    <!-- A seleção do template será exibida aqui -->
+  </div>
+
+  <h3>Escolha uma Turma</h3>
+  <ul id="turma-list">
+    <% @turmas.each do |turma| %>
+      <li>
+        <%= link_to turma.nome, '#', class: 'turma-link', data: { turma_id: turma.id, turma_name: turma.nome } %>
+      </li>
+    <% end %>
+  </ul>
+
+  <div id="selected-turma">
+    <!-- A seleção da turma será exibida aqui -->
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Função para lidar com a seleção de templates
+      const templateLinks = document.querySelectorAll('.template-link');
+      templateLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          const templateName = event.target.dataset.templateName;
+          const selectedTemplateDiv = document.getElementById('selected-template');
+          selectedTemplateDiv.innerHTML = `<p>Você escolheu o template: ${templateName}</p>`;
+        });
+      });
+
+      // Função para lidar com a seleção de turmas
+      const turmaLinks = document.querySelectorAll('.turma-link');
+      turmaLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          const turmaName = event.target.dataset.turmaName;
+          const selectedTurmaDiv = document.getElementById('selected-turma');
+          selectedTurmaDiv.innerHTML = `<p>Você escolheu a turma: ${turmaName}</p>`;
+        });
+      });
+    });
+  </script>
+<% end %>
