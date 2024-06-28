@@ -1,4 +1,15 @@
+##
+# Essa controller é responsável por importar dados de um arquivo JSON e criar usuários e suas associações no banco de dados.
+
 class ImportUserController < ApplicationController
+
+  ##
+  # Tenta criar novos usuários e suas associações a partir de um JSON.
+  #
+  # Retorna:: JSON com mensagem de sucesso ou erro.
+  # - Caso o JSON seja inválido, retorna um JSON com mensagem de erro e status 400.
+  # - Caso ocorra um erro ao criar os usuários e suas associações, retorna um JSON com mensagem de erro e status 400.
+
   def create
     class_members = JSON.parse(params[:data], symbolize_names: true) rescue nil
     if class_members.present?
@@ -40,8 +51,6 @@ class ImportUserController < ApplicationController
 
       # Associate user (docente) with turma through matricula
       matricula = Matricula.find_or_create_by(user: user, turma: turma)
-
-
     end
   end
 end
