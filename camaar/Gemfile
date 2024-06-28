@@ -63,6 +63,7 @@ end
 group :development, :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
+  gem 'capybara-email'
   gem "cucumber-rails", require: false
   gem 'cucumber'
   gem "rspec-rails"

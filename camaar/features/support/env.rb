@@ -7,9 +7,15 @@
 
 require 'cucumber/rails'
 require 'rspec/rails'
+require 'capybara/email'
+require 'capybara/cucumber'
+require 'capybara/rails'
 
 
+Capybara.default_driver = :selenium_chrome_headless # or :selenium_chrome
+Capybara.javascript_driver = :selenium_chrome_headless # for JavaScript tests
 
+World(Capybara::DSL)
 require 'rspec/expectations'
 World(RSpec::Matchers)
 
