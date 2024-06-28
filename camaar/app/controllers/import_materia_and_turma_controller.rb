@@ -1,4 +1,17 @@
+##
+# Importa Materia e Turma de dados de um JSON.
+#
+# O JSON deve ser enviado no corpo da requisição com a chave 'data'.
+
 class ImportMateriaTurmaController < ApplicationController
+
+  ##
+  # Este método tenta criar uma nova Materia e Turma a partir de um JSON.
+  #
+  # Retorna:: JSON com mensagem de sucesso ou erro.
+  # - Caso o JSON seja inválido, retorna um JSON com mensagem de erro e status 400.
+  # - Caso ocorra um erro ao criar as Materia e Turma, retorna um JSON com mensagem de erro e status 400.
+
   def create
     materia_data = JSON.parse(params[:data], symbolize_names: true) rescue nil
     if materia_data.present?

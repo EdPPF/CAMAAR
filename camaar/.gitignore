@@ -37,3 +37,6 @@
 /config/master.key
 
 /coverage
+
+# Temporariamente excluído:
+/doc
