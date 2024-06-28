@@ -75,3 +75,7 @@ end
 gem "devise", "~> 4.9"
 gem "panko_serializer"
 gem "hashie"
+
+# Sprint 3
+gem 'rubycritic', '~> 2.9', '>= 2.9.1'
+gem 'simplecov', '~> 0.22.0'
