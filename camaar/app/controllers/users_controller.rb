@@ -13,8 +13,8 @@ class UsersController < ApplicationController
   def index
       users = User.all
       render json: array_serializer(users), status: :ok
-  rescue StandardError => e
-      render json: e, status: :not_found
+#  rescue StandardError => e
+#      render json: e, status: :not_found
   end
 
   def show
@@ -37,7 +37,7 @@ class UsersController < ApplicationController
       render json: { message: "Invalid JSON data format." }, status: :bad_request
     end
   end
-
+=begin
   def update
       user = User.find(params[:id])
       user.update!(user_params)
@@ -45,6 +45,7 @@ class UsersController < ApplicationController
   rescue StandardError => e
       render json: e, status: :bad_request
   end
+=end
 
   def delete
       user = User.find(params[:id])
@@ -105,8 +106,7 @@ class UsersController < ApplicationController
 
           #UserMailer.welcome_email(user, password).deliver_now!
         else
-          user.update!(curso: dicente_data[:curso],
-                       formacao: dicente_data[:formacao], ocupacao: dicente_data[:ocupacao], role: :user)
+          user.update!(curso: dicente_data[:curso], formacao: dicente_data[:formacao], ocupacao: dicente_data[:ocupacao], role: :user)
         end
 
         # Associate user with turma through matricula
@@ -123,8 +123,7 @@ class UsersController < ApplicationController
                                     matricula: docente_data[:usuario], password:password,
                                     formacao: docente_data[:formacao], ocupacao: docente_data[:ocupacao], role: :user)
       else
-        user_docente.update!(
-          formacao: docente_data[:formacao], ocupacao: docente_data[:ocupacao], role: :user)
+        user_docente.update!(formacao: docente_data[:formacao], ocupacao: docente_data[:ocupacao], role: :user)
       end
       # Associate user (docente) with turma through matricula
       matricula = Matricula.find_or_create_by!(user: user_docente, turma: turma)

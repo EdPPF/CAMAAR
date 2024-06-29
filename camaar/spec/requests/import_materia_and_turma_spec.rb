@@ -37,16 +37,16 @@
       end
     end
 
-    #context "with data import error" do
-    #  it "handles errors and returns bad request" do
-        # Mock Materia.create! to raise an error
-    #    allow(Materia).to receive(:create!).and_raise(StandardError, "Data saving failed!")
+    context "with data import error" do
+      it "handles errors and returns bad request" do
+        # Simulate error during Materia creation
+        allow(Materia).to receive(:create!).and_raise(StandardError, "Data saving failed!")
 
-    #    post :create, params: { data: data }, as: :json
+        post :create, params: { data: data }, as: :json
 
-    #    expect(response).to have_http_status(:bad_request)
-    #    expect(response.parsed_body).to eq({ "message" => "Error importing data: Data saving failed!" })
-    #  end
-    #end
+        expect(response).to have_http_status(:bad_request)
+        expect(response.parsed_body).to eq({ "message" => "Error importing data: Data saving failed!" })
+      end
+    end
   end
 end

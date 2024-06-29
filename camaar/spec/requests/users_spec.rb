@@ -26,6 +26,8 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+
+
   describe "GET /:id" do
     let(:user) { create(:user, nome:"João", email:"jao@exemplo.com", curso:"CIÊNCIA DA COMPUTAÇÃO/CIC", matricula:"190084001", formacao:"graduando", ocupacao:"dicente", role:"user") }
     let(:user_params) do
@@ -57,30 +59,31 @@ RSpec.describe "Users", type: :request do
     end
   end
 
-  # describe "POST /" do
-  #   let(:user_params) do
-  #     {
-  #       nome:"João", email:"jao@exemplo.com", password:"123456", curso:"CIÊNCIA DA COMPUTAÇÃO/CIC", matricula:"190084001", formacao:"graduando", ocupacao:"dicente",
-  #     }
-  #   end
+=begin   describe "POST /" do
+     let(:user_params) do
+       {
+         nome:"João", email:"jao@exemplo.com", password:"123456", curso:"CIÊNCIA DA COMPUTAÇÃO/CIC", matricula:"190084001", formacao:"graduando", ocupacao:"dicente",
+       }
+     end
 
-  #   before do
-  #     post "/users", params: { user: user_params }
-  #   end
+     before do
+       post "/users", params: { user: user_params }
+     end
 
-  #   context "quando os parâmetros são válidos" do
-  #     it "retorna status 201 Created" do
-  #       expect(response).to have_http_status(201)
-  #     end
+     context "quando os parâmetros são válidos" do
+       it "retorna status 201 Created" do
+         expect(response).to have_http_status(201)
+       end
 
-  #     it "retorna o novo usuário" do
-  #       json_response = JSON.parse(response.body)
-  #       expect(json_response.except('id')).to eq(
-  #         {"nome"=>"João", "email"=>"jao@exemplo.com", "curso"=>"CIÊNCIA DA COMPUTAÇÃO/CIC", "matricula"=>"190084001", "formacao"=>"graduando", "ocupacao"=>"dicente", "role"=>"user"}
-  #       )
-  #     end
-  #   end
-  # end
+       it "retorna o novo usuário" do
+         json_response = JSON.parse(response.body)
+         expect(json_response.except('id')).to eq(
+           {"nome"=>"João", "email"=>"jao@exemplo.com", "curso"=>"CIÊNCIA DA COMPUTAÇÃO/CIC", "matricula"=>"190084001", "formacao"=>"graduando", "ocupacao"=>"dicente", "role"=>"user"}
+         )
+       end
+     end
+  end
+=end
 
   # describe "PATCH /:id" do
   #   let(:userA) { create(:user, nome:"JoãoA", email:"jao@exemplo.com", password:"123456", curso:"CIÊNCIA DA COMPUTAÇÃO/CIC", matricula:"190084001", formacao:"graduando", ocupacao:"dicente", role:"user") }
