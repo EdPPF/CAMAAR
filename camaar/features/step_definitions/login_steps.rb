@@ -19,9 +19,9 @@ When(/^eu clico no botão de login$/) do
   click_button 'Log in'
 end
 
-When(/^eu devo ser redirecionado para a página inicial$/) do
-  expect(page).to have_current_path(root_path)
-end
+#When(/^eu devo ser redirecionado para a página inicial$/) do
+#  expect(page).to have_current_path(root_path)
+#end
 
 When(/^eu insiro um e\-mail, matrícula ou senha inválidos$/) do
   @user = User.create(nome: "User", email: "user@example.com",

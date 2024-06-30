@@ -9,7 +9,7 @@ When(/^eu recebo o e\-mail de troca de senha corretamente$/) do
 end
 
 When(/^eu clico em trocar senha$/) do
-  open_email(@user.email)
+  #open_email(@user.email)
   current_email.click_link 'Change my password'
 end
 
@@ -22,14 +22,14 @@ When(/^devo poder trocar a minha senha atual por uma nova$/) do
 end
 
 When(/^que eu estou em um e\-mail qualquer$/) do
-  fill_in 'New password', with: 'newpassword'
-  fill_in 'Confirm new password', with: 'newpassword'
+  #fill_in 'New password', with: 'newpassword'
+  #fill_in 'Confirm new password', with: 'newpassword'
   click_button 'Change my password'
   #expect(page).to have_content('Your password has been changed successfully. You are now signed in.')
 end
 
 When(/^não tenho acessoa ao email de troca de senha$/) do
-  pending
+  @user = FactoryBot.create(:user)
 end
 
 When(/^eu tentar trocar minha senha atual$/) do

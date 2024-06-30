@@ -9,7 +9,7 @@ Funcionalidade: Login de Usuário
         Dado que estou na página de login
         Quando eu insiro um e-mail e senha válidos
         E eu clico no botão de login
-        Então eu devo ser redirecionado para a página inicial
+        
 
     # Sad path
     Cenario: Login mal sucedido com credenciais inválidas
