@@ -47,8 +47,8 @@ Rails.application.routes.draw do
   scope "/users" do
     get "/", to: "users#index"
     get "/:id", to: "users#show"
-    post "/", to: "users#create"
-    patch "/:id", to: "users#update"
+    # post "/", to: "users#create" - obsoleto com o devise
+    # patch "/:id", to: "users#update"
     delete "/:id", to: "users#delete"
   end
 

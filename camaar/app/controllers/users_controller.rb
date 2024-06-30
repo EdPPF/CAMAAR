@@ -13,8 +13,6 @@ class UsersController < ApplicationController
   def index
       users = User.all
       render json: array_serializer(users), status: :ok
-  rescue StandardError => e
-      render json: e, status: :not_found
   end
 
   def show
@@ -24,22 +22,22 @@ class UsersController < ApplicationController
       render json: e, status: :not_found
   end
 
-  def create
-      user = User.new(user_params)
-      puts user_params
-      user.save!
-      render json: user, status: :created
-  rescue StandardError => e
-      render json: e, status: :unprocessable_entity
-  end
+#   def create
+#       user = User.new(user_params)
+#       puts user_params
+#       user.save!
+#       render json: user, status: :created
+#   rescue StandardError => e
+#       render json: e, status: :unprocessable_entity
+#   end
 
-  def update
-      user = User.find(params[:id])
-      user.update!(user_params)
-      render json: user, status: :ok
-  rescue StandardError => e
-      render json: e, status: :bad_request
-  end
+#   def update
+#       user = User.find(params[:id])
+#       user.update!(user_params)
+#       render json: user, status: :ok
+#   rescue StandardError => e
+#       render json: e, status: :bad_request
+#   end
 
   def delete
       user = User.find(params[:id])
@@ -55,9 +53,9 @@ class UsersController < ApplicationController
   #     params.require(:user).permit(:email, :password)
   # end
 
-  def user_params
-    params.require(:user).permit(:nome, :email, :password, :curso, :matricula, :formacao, :ocupacao)
-  end
+#   def user_params
+#     params.require(:user).permit(:nome, :email, :password, :curso, :matricula, :formacao, :ocupacao)
+#   end
 
   def serializer(user)
     UserSerializer.new.serialize_to_json(user)
