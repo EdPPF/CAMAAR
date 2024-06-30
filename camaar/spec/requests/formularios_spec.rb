@@ -55,7 +55,7 @@ RSpec.describe "Formularios", type: :request do
       { nome: "Avaliação A", turma_id: turma.id, template_id: template.id }
     end
     before do
-      post "/formularios", params: { formulario: formulario_params }
+      post "/formularios", params: { formulario: formulario_params }, as: :json
     end
 
     context "quando os parâmetros são válidos" do
@@ -83,7 +83,7 @@ RSpec.describe "Formularios", type: :request do
 
     context "quando os parâmetros estão ok" do
       before do
-        patch "/formularios/#{formularioA.id}", params: { formulario: { nome: "Avaliação C" } }
+        patch "/formularios/#{formularioA.id}", params: { formulario: { nome: "Avaliação C" } }, as: :json
       end
 
       it "retorna status 200 OK" do
@@ -113,7 +113,7 @@ RSpec.describe "Formularios", type: :request do
 
     context "quando o formulário existe" do
       it "retorna HTTP status ok" do
-        delete "/formularios/#{formulario.id}"
+        delete "/formularios/#{formulario.id}", as: :json
         expect(response).to have_http_status(200)
       end
     end
