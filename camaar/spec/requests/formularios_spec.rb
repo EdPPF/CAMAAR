@@ -70,6 +70,12 @@ RSpec.describe "Formularios", type: :request do
         )
       end
     end
+    context "quando os parametros são invalidos" do
+      it "retorna bad request" do
+        post "/formularios", params: { formulario: nil }, as: :json
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
   end
 
   describe "PATCH /:id" do
@@ -123,6 +129,14 @@ RSpec.describe "Formularios", type: :request do
         delete "/formularios/0"
         expect(response).to have_http_status(404)
       end
+    end
+  end
+
+  describe "GET /export_csv" do
+    it "retorna HTTP status ok" do
+      get export_csv_formularios_path, params: {format: :csv}
+      puts response.body
+      expect(response).to be_successful
     end
   end
 

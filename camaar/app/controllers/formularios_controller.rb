@@ -47,7 +47,7 @@ class FormulariosController < ApplicationController
         end
     end
 
-    def delete
+    def destroy
         @formulario = Formulario.find(params[:id])
         @formulario.destroy!
         # render json: { message: "Formulario deleted." }, status: :ok
@@ -79,10 +79,10 @@ class FormulariosController < ApplicationController
 
     def generate_csv(formularios)
         CSV.generate(headers: true) do |csv|
-          csv << ['ID', 'Nome', 'Descrição', 'Criado em', 'Atualizado em']
+          csv << ['ID', 'Nome', 'Criado em', 'Atualizado em']
 
           formularios.each do |formulario|
-            csv << [formulario.id, formulario.nome, formulario.descricao, formulario.created_at, formulario.updated_at]
+            csv << [formulario.id, formulario.nome, formulario.created_at, formulario.updated_at]
           end
     end
 end
