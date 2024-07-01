@@ -24,28 +24,24 @@ class UsersController < ApplicationController
       render json: e, status: :not_found
   end
 
-  def create
-    class_members = JSON.parse(params[:data], symbolize_names: true) rescue nil
-    if class_members.present?
-      begin
-        import_users(class_members)
-        render json: { message: "Data imported successfully!" }, status: :created
-      rescue StandardError => e
-        render json: { message: "Error importing data: #{e.message}" }, status: :bad_request
-      end
-    else
-      render json: { message: "Invalid JSON data format." }, status: :bad_request
-    end
-  end
-=begin
-  def update
-      user = User.find(params[:id])
-      user.update!(user_params)
-      render json: user, status: :ok
-  rescue StandardError => e
-      render json: e, status: :bad_request
-  end
-=end
+
+#   def create
+#       user = User.new(user_params)
+#       puts user_params
+#       user.save!
+#       render json: user, status: :created
+#   rescue StandardError => e
+#       render json: e, status: :unprocessable_entity
+#   end
+
+#   def update
+#       user = User.find(params[:id])
+#       user.update!(user_params)
+#       render json: user, status: :ok
+#   rescue StandardError => e
+#       render json: e, status: :bad_request
+#   end
+
 
   def delete
       user = User.find(params[:id])
@@ -61,9 +57,9 @@ class UsersController < ApplicationController
   #     params.require(:user).permit(:email, :password)
   # end
 
-  def user_params
-    params.require(:user).permit(:nome, :email, :password, :curso, :matricula, :formacao, :ocupacao)
-  end
+#   def user_params
+#     params.require(:user).permit(:nome, :email, :password, :curso, :matricula, :formacao, :ocupacao)
+#   end
 
   def serializer(user)
     UserSerializer.new.serialize_to_json(user)

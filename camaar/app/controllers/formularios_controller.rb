@@ -25,27 +25,36 @@ class FormulariosController < ApplicationController
 
     def create
         @formulario = Formulario.new(formulario_params)
-        formulario.save!
-        # render json: formulario, status: :created
+        @formulario.save!
+        respond_to do |format|
+            format.html
+            format.json { render json: @formulario, status: :created }
+        end
     rescue StandardError => e
         render json: e, status: :bad_request
     end
 
     def update
         @formulario = Formulario.find(params[:id])
-        if formulario.update!(formulario_params)
-            redirect_to formularios_path, notice: "#{formulario.nome} updated."
+        if @formulario.update(formulario_params)
+            respond_to do |format|
+                format.html { redirect_to formularios_path, notice: "#{@formulario.nome} updated." }
+                format.json { render json: @formulario, status: :ok }
+            end
         else
-            flash.now[:alert] = "#{formulario.nome} could not be updated: " + formulario.errors.full_messages.join(", ")
-            render 'edit', status: :unprocessable_entity
-            # render json: formulario, status: :ok
+            flash.now[:alert] = "#{@formulario.nome} could not be updated: " + @formulario.errors.full_messages.join(", ")
+            render 'edit', status: :bad_request
         end
     end
 
-    def delete
+    def destroy
         @formulario = Formulario.find(params[:id])
-        formulario.destroy!
+        @formulario.destroy!
         # render json: { message: "Formulario deleted." }, status: :ok
+        respond_to do |format|
+            format.html 
+            format.json { render json: @formulario, status: :ok }
+        end
     rescue StandardError => e
         render json: e, status: :not_found
     end
@@ -70,10 +79,10 @@ class FormulariosController < ApplicationController
 
     def generate_csv(formularios)
         CSV.generate(headers: true) do |csv|
-          csv << ['ID', 'Nome', 'Descrição', 'Criado em', 'Atualizado em']
+          csv << ['ID', 'Nome', 'Criado em', 'Atualizado em']
 
           formularios.each do |formulario|
-            csv << [formulario.id, formulario.nome, formulario.descricao, formulario.created_at, formulario.updated_at]
+            csv << [formulario.id, formulario.nome, formulario.created_at, formulario.updated_at]
           end
     end
 end

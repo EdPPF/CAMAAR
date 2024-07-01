@@ -86,7 +86,6 @@ RSpec.describe "Materias", type: :request do
       end
       it "foi bem sucedida" do
         delete materia_path(@materia2.id)
-        puts response.status
         expect(response).to redirect_to(materias_path)
       end
     end

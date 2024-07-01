@@ -25,14 +25,14 @@ Rails.application.routes.draw do
     # get "/:id", to: "matriculas#show"
     # patch "/:id", to: "matriculas#update"
   end
-  scope "/formularios" do
-    get "/new", to: "formularios#new"
-    get "/", to: "formularios#index"
-    get "/:id", to: "formularios#show"
-    post "/", to: "formularios#create"
-    patch "/:id", to: "formularios#update"
-    delete "/:id", to: "formularios#delete"
-  end
+  # scope "/formularios" do
+  #   get "/new", to: "formularios#new"
+  #   get "/", to: "formularios#index"
+  #   get "/:id", to: "formularios#show"
+  #   post "/", to: "formularios#create"
+  #   patch "/:id", to: "formularios#update"
+  #   delete "/:id", to: "formularios#delete"
+  # end
   scope "/questoes" do
     get "/", to: "questoes#index"
     get "/:id", to: "questoes#show"
@@ -50,8 +50,8 @@ Rails.application.routes.draw do
   scope "/users" do
     get "/", to: "users#index"
     get "/:id", to: "users#show"
-    post "/", to: "users#create"
-    patch "/:id", to: "users#update"
+    # post "/", to: "users#create" - obsoleto com o devise
+    # patch "/:id", to: "users#update"
     delete "/:id", to: "users#delete"
   end
 
@@ -62,5 +62,6 @@ Rails.application.routes.draw do
       get :export_csv
     end
   end
+  
 end
 
