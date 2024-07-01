@@ -1,15 +1,14 @@
+##
+# Responsável por controlar as requisições referentes a User.
+
 class UsersController < ApplicationController
-  # def login
-  #   user = User.find_by(email: login_params[:email])
-  #   if user.valid_password?(login_params[:password])
-  #       render json: user, status: :ok
-  #   else
-  #       head :unauthorized
-  #   end
-  # rescue StandardError => e
-  #     head :unauthorized
-  # end
+
+  ##
+  # Lista todos os usuários cadastrados no sistema.
   #
+  # Retorno:: renderiza um JSON com todos os usuários e status HTTP 200 (OK).
+  # - Se não houver usuários cadastrados, renderiza um JSON vazio e status HTTP 404 (Not Found).
+
   def index
       users = User.all
       render json: array_serializer(users), status: :ok
@@ -17,12 +16,28 @@ class UsersController < ApplicationController
       render json: e, status: :not_found
   end
 
+  ##
+  # Mostra um usuário específico.
+  #
+  # Parâmetros:: o ID do usuário, passado pela rota.
+  #
+  # Retorno:: renderiza um JSON com o usuário e status HTTP 200 (OK).
+  # - Se o usuário não for encontrado, renderiza um JSON vazio e status HTTP 404 (Not Found).
+
   def show
       user = User.find(params[:id])
       render json: serializer(user), status: :ok
   rescue StandardError => e
       render json: e, status: :not_found
   end
+
+  ##
+  # Cria um novo usuário.
+  #
+  # Parâmetros:: os atributos do usuário, na requisição.
+  #
+  # Retorno:: renderiza um JSON com o usuário criado e status HTTP 201 (Created).
+  # - Se os atributos do usuário forem inválidos, renderiza um JSON com o erro e status HTTP 422 (Unprocessable Entity).
 
   def create
       user = User.new(user_params)
@@ -33,6 +48,14 @@ class UsersController < ApplicationController
       render json: e, status: :unprocessable_entity
   end
 
+  ##
+  # Atualiza um usuário existente.
+  #
+  # Parâmetros:: os atributos do usuário, na requisição.
+  #
+  # Retorno:: renderiza um JSON com o usuário atualizado e status HTTP 200 (OK).
+  # - Se o usuário não for encontrado, renderiza um JSON vazio e status HTTP 404 (Not Found).
+
   def update
       user = User.find(params[:id])
       user.update!(user_params)
@@ -40,6 +63,14 @@ class UsersController < ApplicationController
   rescue StandardError => e
       render json: e, status: :bad_request
   end
+
+  ##
+  # Deleta um usuário existente.
+  #
+  # Parâmetros:: o ID do usuário, passado pela rota.
+  #
+  # Retorno:: renderiza um JSON com o usuário deletado e status HTTP 200 (OK).
+  # - Se o usuário não for encontrado, renderiza um JSON vazio e status HTTP 404 (Not Found).
 
   def delete
       user = User.find(params[:id])
