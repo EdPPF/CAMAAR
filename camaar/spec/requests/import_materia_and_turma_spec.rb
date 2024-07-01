@@ -1,5 +1,5 @@
-require 'hashie'
-RSpec.describe "ImportMateriaAndTurmaController", type: :controller do
+
+ RSpec.describe ImportMateriaAndTurmaController, type: :controller do
   #let(:valid_json) do
   #  { data: [
   #    { code: "MAT101", name: "Mathematics 1", class: { classCode: "TURMA_A", semester: "2021.2", time: "10:00-11:00" } },
@@ -37,16 +37,16 @@ RSpec.describe "ImportMateriaAndTurmaController", type: :controller do
       end
     end
 
-    #context "with data import error" do
-    #  it "handles errors and returns bad request" do
-        # Mock Materia.create! to raise an error
-    #    allow(Materia).to receive(:create!).and_raise(StandardError, "Data saving failed!")
+    context "with data import error" do
+      it "handles errors and returns bad request" do
+        # Simulate error during Materia creation
+        allow(Materia).to receive(:create!).and_raise(StandardError, "Data saving failed!")
 
-    #    post :create, params: { data: data }, as: :json
+        post :create, params: { data: data }, as: :json
 
-    #    expect(response).to have_http_status(:bad_request)
-    #    expect(response.parsed_body).to eq({ "message" => "Error importing data: Data saving failed!" })
-    #  end
-    #end
+        expect(response).to have_http_status(:bad_request)
+        expect(response.parsed_body).to eq({ "message" => "Error importing data: Data saving failed!" })
+      end
+    end
   end
 end

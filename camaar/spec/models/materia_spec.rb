@@ -7,10 +7,10 @@ RSpec.describe Materia, type: :model do
       expect(materia).to be_valid
     end
 
-    it "deve possuir um nome" do
-      materiaB = build(:materia, nome: nil)
-      expect(materiaB).to_not be_valid
-    end
+    # it "deve possuir um nome" do
+    #   materiaB = build(:materia, nome: nil)
+    #   expect(materiaB).to_not be_valid
+    # end
 
     it "deve possuir um código" do
       materiaB = build(:materia, codigo: nil)

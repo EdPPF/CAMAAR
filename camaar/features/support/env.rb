@@ -6,7 +6,21 @@
 
 
 require 'cucumber/rails'
+require 'rspec/rails'
+require 'capybara/email'
+require 'capybara/cucumber'
+require 'capybara/rails'
 
+
+Capybara.default_driver = :selenium_chrome_headless # or :selenium_chrome
+Capybara.javascript_driver = :selenium_chrome_headless # for JavaScript tests
+
+World(Capybara::DSL)
+require 'rspec/expectations'
+World(RSpec::Matchers)
+
+require 'rspec/mocks'
+World(RSpec::Mocks::ExampleMethods)
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
 # your application behaves in the production environment, where an error page will
@@ -28,6 +42,7 @@ ActionController::Base.allow_rescue = false
 # For some databases (like MongoDB and CouchDB) you may need to use :truncation instead.
 begin
   DatabaseCleaner.strategy = :transaction
+  DatabaseCleaner.clean_with(:truncation)
 rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
