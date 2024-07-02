@@ -105,7 +105,6 @@
         <ul>
         <a class="back" href="<%= root_path %>">Voltar</a>
         </ul>
->
     </div>
 
     <!-- Conteúdo Principal -->
@@ -115,7 +114,7 @@
             <ul>
                 <li><%= link_to 'Importar Dados', new_formulario_path %></li>
                 <li><%= link_to 'Editar Templates', templates_path %></li>
-                <li><%= link_to 'Enviar Formulários', formularios_path %></li>
+                <li><%= link_to 'Enviar Formulários', send_form_formularios_path %></li>
                 <li><%= link_to 'Resultados', export_csv_formularios_path(format: :csv) %></li>
             </ul>
         </div>

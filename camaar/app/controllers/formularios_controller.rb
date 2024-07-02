@@ -27,7 +27,7 @@ class FormulariosController < ApplicationController
         @formulario = Formulario.new(formulario_params)
         @formulario.save!
         respond_to do |format|
-            format.html
+            format.html { redirect_to new_formulario_path, notice: "#{@formulario.nome} created."}
             format.json { render json: @formulario, status: :created }
         end
     rescue StandardError => e
@@ -64,6 +64,7 @@ class FormulariosController < ApplicationController
     end
 
     def send_form
+        @formulario = Formulario.new
         @turmas = Turma.includes(:materia).all();
         @templates = Template.all();
     end

@@ -17,7 +17,6 @@
       padding: 20px;
       height: 100vh;
       box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-      position: fixed;
     }
     .sidebar h2 {
       color: #f8f9fa;
@@ -111,10 +110,14 @@
     <div class="content">
         <div class="gerenciamento-menu">
             <h2>Enviar Formulario</h2>
-                <%= form_with url: formularios_path, method: :post, model: @formulario do |f| %>
-
+                <%= form_with model: @formulario, url: formularios_path, method: :post do |f| %>
+                    <%= f.label :nome, 'Nome do formulario' %>
+                    <%= f.text_field :nome, required: true %>
+                    <br>
                     <%= f.collection_select :template_id, @templates, :id, :nome, prompt: "Selecione um Template", required: true %>
+                    <br>
                     <%= f.collection_select :turma_id, @turmas, :id, :codigo, prompt: "Selecione uma turma", required: true %>
+                    <br>
 
                     <%= f.submit "Enviar" %>
                 <% end %>
