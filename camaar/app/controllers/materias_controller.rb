@@ -7,6 +7,7 @@ class MateriasController < ApplicationController
             format.json { render json: materias }
         end
     end
+
     def show
         materia = Materia.find(params[:id])
 
@@ -15,10 +16,6 @@ class MateriasController < ApplicationController
             format.json { render json: materia }
         end
     end
-
-    # def new
-    #     materia = Materia.new
-    # end
 
     def create
         materia = Materia.new(materia_params)
@@ -31,16 +28,13 @@ class MateriasController < ApplicationController
         end
     end
 
-    # def edit
-    #     materia = Materia.find params[:id]
-    # end
-
     def update
         materia = Materia.find(params[:id])
+        nome_materia = materia.nome
         if materia.update(materia_params)
-            redirect_to materias_path, notice: "#{materia.nome} updated."
+            redirect_to materias_path, notice: "#{nome_materia} updated."
         else
-            flash.now[:alert] = "#{materia.nome} could not be updated: " + materia.errors.full_messages.join(", ")
+            flash.now[:alert] = "#{nome_materia} could not be updated: " + materia.errors.full_messages.join(", ")
             render 'edit', status: :unprocessable_entity
         end
     end
