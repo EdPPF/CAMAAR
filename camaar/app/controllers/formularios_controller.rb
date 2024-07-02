@@ -42,7 +42,7 @@ class FormulariosController < ApplicationController
         end
     end
 
-    def delete
+    def destroy
         @formulario = Formulario.find(params[:id])
         formulario.destroy!
         # render json: { message: "Formulario deleted." }, status: :ok
@@ -52,6 +52,11 @@ class FormulariosController < ApplicationController
 
     def new
         @formularios = Formulario.new
+    end
+
+    def send_form
+        @turmas = Turma.includes(:materia).all();
+        @templates = Template.all();
     end
 
     def export_csv
