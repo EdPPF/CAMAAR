@@ -63,6 +63,7 @@ class FormulariosController < ApplicationController
         @formularios = Formulario.new
     end
 
+    # idealmente, o que está nesse método era para estar no formulario#new, mas esse método já está renderizando uma view diferente, então decidi criar um método novo
     def send_form
         @formulario = Formulario.new
         @turmas = Turma.includes(:materia).all();
