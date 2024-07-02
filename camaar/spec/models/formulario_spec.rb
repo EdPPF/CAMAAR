@@ -28,10 +28,5 @@ RSpec.describe Formulario, type: :model do
       formulario = Formulario.reflect_on_association(:respostas)
       expect(formulario.macro).to eq(:has_many)
     end
-
-    it "pode ter várias questões" do
-      formulario = Formulario.reflect_on_association(:questaos)
-      expect(formulario.macro).to eq(:has_many)
-    end
   end
 end

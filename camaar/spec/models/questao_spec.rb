@@ -14,17 +14,12 @@ RSpec.describe Questao, type: :model do
   end
 
   describe "para ter relações válidas" do
-    it "deve pertencer a um formulário" do
-      questao = Questao.reflect_on_association(:formulario)
-      expect(questao.macro).to eq(:belongs_to)
-    end
-
     it "deve pertencer a um template" do
       questao = Questao.reflect_on_association(:template)
       expect(questao.macro).to eq(:belongs_to)
     end
 
-    it "pode ter uma resposta" do
+    it "pode ter várias respostas" do
       questao = Questao.reflect_on_association(:respostas)
       expect(questao.macro).to eq(:has_many)
     end

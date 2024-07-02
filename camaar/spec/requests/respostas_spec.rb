@@ -29,7 +29,7 @@ RSpec.describe "Respostas", type: :request do
   describe "GET /:id" do
     let(:formulario) { create(:formulario) }
     let(:questao) { create(:questao) }
-    let(:resposta) { create(:resposta, texto:"Resposta A", formulario: formulario, questao: questao) }
+    let(:resposta) { create(:resposta, texto:"Resposta A", questao: questao) }
     let(:resposta_params) do
       attributes_for(:resposta)
     end
@@ -64,7 +64,7 @@ RSpec.describe "Respostas", type: :request do
     let (:materia) { create(:materia, codigo:"TST0097", nome:"BANCOS DE TESTES") }
     let (:turma) { create(:turma, codigo:"TA", semestre:"2021.2", horario:"35T45", materia:materia)}
     let(:formulario) { create(:formulario, nome: "Avaliação A", turma:turma, template:template) }
-    let(:questao) { create(:questao, texto:"Texto A", formulario:formulario, template:template) }
+    let(:questao) { create(:questao, texto:"Texto A", template:template) }
     let(:resposta_params) do
       attributes_for(:resposta, texto:"Resposta A", formulario_id: formulario.id, questao_id: questao.id)
     end

@@ -2,12 +2,11 @@ require 'rails_helper'
 
 RSpec.describe "Questoes", type: :request do
   describe "GET /" do
-    # texto, formulario, template
-    let (:formulario) { create(:formulario) }
+    # texto,, template
     let (:template) { create(:template) } # -> template_id = 2, talvez porque formulário já instancia um template_id = 1
     before do
-      create(:questao, texto:"Texto da questão.", formulario:formulario, template:template)
-      create(:questao, texto:"Texto da questão.", formulario:formulario, template:template)
+      create(:questao, texto:"Texto da questão.", template:template)
+      create(:questao, texto:"Texto da questão.", template:template)
     end
 
     context "quando existem questões" do
@@ -22,17 +21,16 @@ RSpec.describe "Questoes", type: :request do
       it "retorna as questões" do
         json_response = JSON.parse(response.body)
         expect(json_response.map { |questao| questao.except('created_at', 'updated_at', 'id') }).to eq([
-          {"texto"=>"Texto da questão.", "formulario_id"=>1, "template_id"=>2},
-          {"texto"=>"Texto da questão.", "formulario_id"=>1, "template_id"=>2}
+          {"texto"=>"Texto da questão.", "template_id"=>template.id},
+          {"texto"=>"Texto da questão.", "template_id"=>template.id}
         ])
       end
     end
   end
 
   describe "GET /:id" do
-    let (:formulario) { create(:formulario) }
     let (:template) { create(:template) }
-    let (:questao) { create(:questao, texto:"Texto da questão.", formulario:formulario, template:template) }
+    let (:questao) { create(:questao, texto:"Texto da questão.", template:template) }
     let(:questao_params) do
       attributes_for(:questao)
     end
@@ -49,7 +47,7 @@ RSpec.describe "Questoes", type: :request do
       it "retorna a questão" do
         json_response = JSON.parse(response.body)
         expect(json_response.except('created_at', 'updated_at', 'id')).to eq(
-          {"texto"=>"Texto da questão.", "formulario_id"=>1, "template_id"=>2}
+          {"texto"=>"Texto da questão.", "template_id"=>template.id}
         )
       end
     end
@@ -66,9 +64,8 @@ RSpec.describe "Questoes", type: :request do
     let (:template) { create(:template, nome:"Template A") }
     let (:materia) { create(:materia, codigo:"TST0097", nome:"BANCOS DE TESTES") }
     let (:turma) { create(:turma, codigo:"TA", semestre:"2021.2", horario:"35T45", materia:materia) }
-    let (:formulario) { create(:formulario, nome: "Avaliação A", turma:turma, template:template) }
     let(:questao_params) do
-      { texto: "Texto da questão.", formulario_id: formulario.id, template_id: template.id}
+      { texto: "Texto da questão.", template_id: template.id}
     end
 
     context "quando os parâmetros são válidos" do
@@ -83,14 +80,14 @@ RSpec.describe "Questoes", type: :request do
       it "cria a questão" do
         json_response = JSON.parse(response.body)
         expect(json_response.except('created_at', 'updated_at', 'id')).to eq(
-          { "texto"=>"Texto da questão.", "formulario_id"=>1, "template_id"=>1 }
+          { "texto"=>"Texto da questão.", "template_id"=>template.id }
         )
       end
     end
 
     context "quando os parâmetros não são válidos" do
       it "retorna status 400 Bad Request" do
-        post "/questoes", params: { questao: { texto: nil, formulario_id: nil, template_id: nil } }
+        post "/questoes", params: { questao: { texto: nil, template_id: nil } }
         expect(response).to have_http_status(400)
       end
     end
@@ -98,9 +95,8 @@ RSpec.describe "Questoes", type: :request do
 
   describe "PATCH /:id" do
     let (:template) { create(:template) }
-    let (:formulario) { create(:formulario) }
-    let (:questao1) { create(:questao, texto:"Questão 1.", formulario:formulario, template:template) }
-    let (:questao2) { create(:questao, texto:"Questão 2.", formulario:formulario, template:template) }
+    let (:questao1) { create(:questao, texto:"Questão 1.", template:template) }
+    let (:questao2) { create(:questao, texto:"Questão 2.", template:template) }
     let(:questao_params) do
       attributes_for(:questao)
     end
@@ -117,14 +113,14 @@ RSpec.describe "Questoes", type: :request do
       it "retorna a questão atualizada" do
         json_response = JSON.parse(response.body)
         expect(json_response.except('created_at', 'updated_at', 'id')).to eq(
-          {"texto"=>"Questão 3.", "formulario_id"=>1, "template_id"=>2}
+          {"texto"=>"Questão 3.", "template_id"=>template.id}
         )
       end
     end
 
     context "quando os parâmetros não são válidos" do
       it "retorna HTTP status 400 Bad Request" do
-        patch "/questoes/#{questao2.id}", params: { questao: { texto: nil, formulario_id: nil, template_id: nil } }
+        patch "/questoes/#{questao2.id}", params: { questao: { texto: nil, template_id: nil } }
         expect(response).to have_http_status(400)
       end
     end
@@ -132,8 +128,7 @@ RSpec.describe "Questoes", type: :request do
 
   describe "DELETE /:id" do
     let (:template) { create(:template) }
-    let (:formulario) { create(:formulario) }
-    let (:questao) { create(:questao, texto:"Questão 1.", formulario:formulario, template:template) }
+    let (:questao) { create(:questao, texto:"Questão 1.", template:template) }
 
     context "quando a questão existe" do
       it "retorna status 200 OK" do
