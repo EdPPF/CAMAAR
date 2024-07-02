@@ -25,8 +25,8 @@ RSpec.describe Questao, type: :model do
     end
 
     it "pode ter uma resposta" do
-      questao = Questao.reflect_on_association(:resposta)
-      expect(questao.macro).to eq(:has_one)
+      questao = Questao.reflect_on_association(:respostas)
+      expect(questao.macro).to eq(:has_many)
     end
   end
 end
