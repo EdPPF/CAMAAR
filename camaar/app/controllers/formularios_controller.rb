@@ -2,21 +2,21 @@ require 'csv'
 
 class FormulariosController < ApplicationController
     def index
-        @formularios = Formulario.all
+        formularios = Formulario.all
         # mudei de render json: formularios, status: :ok para render json: formularios, status: :ok
         respond_to do |format|
             format.html
-            format.json { render json: @formularios }
+            format.json { render json: formularios }
         end
     end
 
     def show
-        @formulario = Formulario.find(params[:id])
+        formulario = Formulario.find(params[:id])
          # render json: formulario, status: :ok
 
         respond_to do |format|
             format.html
-            format.json { render json: @formulario }
+            format.json { render json: formulario }
         end
 
     rescue StandardError => e
@@ -24,50 +24,50 @@ class FormulariosController < ApplicationController
     end
 
     def create
-        @formulario = Formulario.new(formulario_params)
-        @formulario.save!
+        formulario = Formulario.new(formulario_params)
+        formulario.save!
         respond_to do |format|
             format.html
-            format.json { render json: @formulario, status: :created }
+            format.json { render json: formulario, status: :created }
         end
     rescue StandardError => e
         render json: e, status: :bad_request
     end
 
     def update
-        @formulario = Formulario.find(params[:id])
-        if @formulario.update(formulario_params)
+        formulario = Formulario.find(params[:id])
+        if formulario.update(formulario_params)
             respond_to do |format|
-                format.html { redirect_to formularios_path, notice: "#{@formulario.nome} updated." }
-                format.json { render json: @formulario, status: :ok }
+                format.html { redirect_to formularios_path, notice: "#{formulario.nome} updated." }
+                format.json { render json: formulario, status: :ok }
             end
         else
-            flash.now[:alert] = "#{@formulario.nome} could not be updated: " + @formulario.errors.full_messages.join(", ")
+            flash.now[:alert] = "#{formulario.nome} could not be updated: " + formulario.errors.full_messages.join(", ")
             render 'edit', status: :bad_request
         end
     end
 
     def destroy
-        @formulario = Formulario.find(params[:id])
-        @formulario.destroy!
+        formulario = Formulario.find(params[:id])
+        formulario.destroy!
         # render json: { message: "Formulario deleted." }, status: :ok
         respond_to do |format|
-            format.html 
-            format.json { render json: @formulario, status: :ok }
+            format.html
+            format.json { render json: formulario, status: :ok }
         end
     rescue StandardError => e
         render json: e, status: :not_found
     end
 
     def new
-        @formularios = Formulario.new
+        formularios = Formulario.new
     end
 
     def export_csv
-        @formularios = Formulario.all
+        formularios = Formulario.all
 
         respond_to do |format|
-          format.csv { send_data generate_csv(@formularios), filename: "formularios-#{Date.today}.csv" }
+          format.csv { send_data generate_csv(formularios), filename: "formularios-#{Date.today}.csv" }
         end
       end
 
