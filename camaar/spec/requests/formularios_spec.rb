@@ -55,7 +55,7 @@ RSpec.describe "Formularios", type: :request do
       { nome: "Avaliação A", turma_id: turma.id, template_id: template.id }
     end
     before do
-      post "/formularios", params: { formulario: formulario_params }
+      post "/formularios", params: { formulario: formulario_params }, as: :json
     end
 
     context "quando os parâmetros são válidos" do
@@ -68,6 +68,12 @@ RSpec.describe "Formularios", type: :request do
         expect(json_response.except('created_at', 'updated_at', 'id')).to eq(
           {"nome"=>"Avaliação A", "turma_id"=>1, "template_id"=>1}
         )
+      end
+    end
+    context "quando os parametros são invalidos" do
+      it "retorna bad request" do
+        post "/formularios", params: { formulario: nil }, as: :json
+        expect(response).to have_http_status(:bad_request)
       end
     end
   end
@@ -83,7 +89,7 @@ RSpec.describe "Formularios", type: :request do
 
     context "quando os parâmetros estão ok" do
       before do
-        patch "/formularios/#{formularioA.id}", params: { formulario: { nome: "Avaliação C" } }
+        patch "/formularios/#{formularioA.id}", params: { formulario: { nome: "Avaliação C" } }, as: :json
       end
 
       it "retorna status 200 OK" do
@@ -113,7 +119,7 @@ RSpec.describe "Formularios", type: :request do
 
     context "quando o formulário existe" do
       it "retorna HTTP status ok" do
-        delete "/formularios/#{formulario.id}"
+        delete "/formularios/#{formulario.id}", as: :json
         expect(response).to have_http_status(200)
       end
     end
@@ -123,6 +129,14 @@ RSpec.describe "Formularios", type: :request do
         delete "/formularios/0"
         expect(response).to have_http_status(404)
       end
+    end
+  end
+
+  describe "GET /export_csv" do
+    it "retorna HTTP status ok" do
+      get export_csv_formularios_path, params: {format: :csv}
+      puts response.body
+      expect(response).to be_successful
     end
   end
 

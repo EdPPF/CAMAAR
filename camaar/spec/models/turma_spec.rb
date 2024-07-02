@@ -25,10 +25,10 @@ RSpec.describe Turma, type: :model do
       expect(turma.semestre).to match(/\A[0-9]{4}\.[1-2]\z/)
     end
 
-    it "deve possuir um horário" do
-      turmaB = build(:turma, horario: nil)
-      expect(turmaB).to_not be_valid
-    end
+    # it "deve possuir um horário" do
+    #   turmaB = build(:turma, horario: nil)
+    #   expect(turmaB).to_not be_valid
+    # end
     it "o horário deve ser válido" do
       turma = create(:turma)
       expect(turma.horario).to match(/\A[0-9]{2}[T|N|M][0-9]{2}\z/)

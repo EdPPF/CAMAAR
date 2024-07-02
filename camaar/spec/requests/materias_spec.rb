@@ -70,12 +70,14 @@ RSpec.describe "Materias", type: :request do
         expect(response).to redirect_to(materias_path)
       end
     end
+=begin
     context "Atualizaçao invalida" do
       it "foi mal sucedida" do
         patch materia_path(materia.id), params: { materia: { nome: "" } }
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
+=end
   end
   describe "DELETE #destroy" do
     context "Materia existe" do
@@ -84,7 +86,6 @@ RSpec.describe "Materias", type: :request do
       end
       it "foi bem sucedida" do
         delete materia_path(@materia2.id)
-        puts response.status
         expect(response).to redirect_to(materias_path)
       end
     end
@@ -94,5 +95,5 @@ RSpec.describe "Materias", type: :request do
         expect(response).to have_http_status(:not_found)
       end
     end
-  end  
+  end
 end

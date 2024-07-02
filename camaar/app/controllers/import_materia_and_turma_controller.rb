@@ -1,4 +1,4 @@
-class ImportMateriaTurmaController < ApplicationController
+class ImportMateriaAndTurmaController < ApplicationController
   def create
     materia_data = JSON.parse(params[:data], symbolize_names: true) rescue nil
     if materia_data.present?

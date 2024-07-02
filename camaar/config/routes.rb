@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   get "/formularios", to: "formularios#index"
+
+  resources :import_materia_and_turma, only: [:create]
+
   root to: "home#index"
   devise_for :users
   scope "/turmas" do
@@ -47,8 +50,8 @@ Rails.application.routes.draw do
   scope "/users" do
     get "/", to: "users#index"
     get "/:id", to: "users#show"
-    post "/", to: "users#create"
-    patch "/:id", to: "users#update"
+    post "/", to: "users#create" #- obsoleto com o devise
+    # patch "/:id", to: "users#update"
     delete "/:id", to: "users#delete"
   end
 
@@ -60,5 +63,5 @@ Rails.application.routes.draw do
       get :export_csv
     end
   end
-end
 
+end
