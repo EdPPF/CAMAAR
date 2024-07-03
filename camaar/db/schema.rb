@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_02_223702) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_03_200204) do
   create_table "formularios", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -86,6 +86,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_02_223702) do
     t.datetime "remember_created_at"
     t.integer "role"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "formularios_users", id: false, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "formulario_id"
+    t.index ["formulario_id"], name: "index_users_formularios_on_formulario_id"
+    t.index ["user_id"], name: "index_users_formularios_on_user_id"
   end
 
   add_foreign_key "formularios", "templates"
