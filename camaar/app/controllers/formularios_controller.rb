@@ -70,6 +70,16 @@ class FormulariosController < ApplicationController
         @templates = Template.all();
     end
 
+    def responder
+        @formulario = Formulario.find(params[:id])
+        @template = @formulario.template
+        @questaos = @template.questaos
+    end
+
+    def show_pending
+        @formularios = Formulario.all
+    end
+
     def export_csv
         @formularios = Formulario.all
 
