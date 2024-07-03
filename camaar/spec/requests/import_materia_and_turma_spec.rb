@@ -10,17 +10,26 @@
 
   describe "POST #create" do
     context "with valid JSON data" do
-      it "imports data successfully" do
-
+      before do
         post :create, params: { data: data }, as: :json
+      end
 
+      it "returns a created status" do
         expect(response).to have_http_status(:created)
         expect(response.parsed_body).to eq({ "message" => "Data imported successfully!" })
+      end
 
-        # Additional assertions for data creation
-        expect(Materia.count).to eq(3)
-        expect(Materia.first.codigo).to eq("CIC0097")
-        expect(Materia.first.turmas.first.codigo).to eq("TA")
+      describe "data creation" do
+        it "creates the expected number of Materias" do
+          expect(Materia.count).to eq(3)
+        end
+
+        it "stes the correct codigo for the first Materia" do
+          expect(Materia.first.codigo).to eq("CIC0097")
+        end
+        it "associates the correct turma with the first Materia" do
+          expect(Materia.first.turmas.first.codigo).to eq("TA")
+        end
       end
     end
 
