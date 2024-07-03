@@ -168,7 +168,7 @@ RSpec.describe "Respostas", type: :request do
         { template: { respostas: { t: {questao_id: questao.id, formulario_id: formulario.id, texto: "oi"}}}}
       end
 
-      it "retorna stauts 201 criado" do
+      it "retorna stauts 201 criado" do # falta dar um jeito de logar o usuario
         post "/formularios/:id/responder", params: bulk_create_params, as: :json
         expect(response).to have_http_status(201)
       end
