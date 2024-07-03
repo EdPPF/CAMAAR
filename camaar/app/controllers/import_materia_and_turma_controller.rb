@@ -1,10 +1,14 @@
 class ImportMateriaAndTurmaController < ApplicationController
   def create
     materia_data = parse_json_data(params[:data])
-    import_materias(materia_data)
-    render json: { message: "Data imported successfully!" }, status: :created
-  rescue JSON::ParserError
+    if materia_data.is_a?(Array) && materia_data.all? { |item| item.is_a?(Hash) }
+      import_materias(materia_data)
+      render json: { message: "Data imported successfully!" }, status: :created
+    else
       render json: { message: "Invalid JSON data format." }, status: :bad_request
+    end
+  rescue JSON::ParserError
+    render json: { message: "Invalid JSON data format." }, status: :bad_request
   rescue StandardError => e
     render json: { message: "Error importing data: #{e.message}" }, status: :bad_request
   end

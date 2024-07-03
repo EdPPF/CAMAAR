@@ -26,10 +26,11 @@
 
     context "with invalid JSON data" do
       let(:invalid_json) do
-        { data: { code: "MAT101", name: "Mathematics 1" } } # Missing class data
+        { data: { code: "MAT101", name: "Mathematics 1" }.to_json } # Missing class data
       end
 
       it "returns bad request for invalid format" do
+        request.headers['Content-Type'] = 'application/json' # Set the request content type to JSON
         post :create, params: invalid_json
 
         expect(response).to have_http_status(:bad_request)
