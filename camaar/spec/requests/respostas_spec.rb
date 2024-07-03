@@ -158,4 +158,20 @@ RSpec.describe "Respostas", type: :request do
       end
     end
   end
+
+  describe "Criação de muitas respostas" do
+    context "quando a formulario foi preenchido corretamente" do
+      let(:template) { create(:template) }
+      let(:questao) { create(:questao) }
+      let(:formulario) { create(:formulario) }
+      let(:bulk_create_params) do
+        { template: { respostas: { t: {questao_id: questao.id, formulario_id: formulario.id, texto: "oi"}}}}
+      end
+
+      it "retorna stauts 201 criado" do
+        post "/formularios/:id/responder", params: bulk_create_params, as: :json
+        expect(response).to have_http_status(201)
+      end
+    end
+  end
 end

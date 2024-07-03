@@ -1,13 +1,15 @@
-<%= form_with url: "/formularios/responder/#{@formulario.id}", method: :post, model: @formulario do |f| %>
-  <%= f.hidden_field :id %>
+<%= form_with url: "/formularios/#{@formulario.id}/responder", method: :post, model: @template do |f| %>
 
-      <%= f.fields_for :questaos do |questao_form| %>
-        <%= questao_form.label questao_form.object.texto %>
-        <%= questao_form.fields_for :resposta do |resposta_form| %>
-          <%= resposta_form.text_field :value %>
-        <% end %>
-        <hr>
-      <% end %>
+  <%= f.fields_for "respostas" do |res_form| %>
+  <% @questaos.each do |questao| %>
+    <%= res_form.fields_for "#{questao.id}" do |resposta_form| %>
+      <%= resposta_form.label questao.texto %>
+      <%= resposta_form.hidden_field :formulario_id, value: @formulario.id %>
+      <%= resposta_form.hidden_field :questao_id, value: questao.id %>
+      <%= resposta_form.text_field :texto, require: true %>
+    <% end %>
+  <% end %>
+  <% end %>
 
 
   <%= f.submit "Submit" %>

@@ -19,6 +19,19 @@ class RespostasController < ApplicationController
     render json: e, status: :bad_request
   end
 
+  def bulk_create 
+    params.require(:template).require(:respostas).each do |key, resposta_param|
+      resposta_param = resposta_param.permit(:questao_id, :formulario_id, :texto)
+      Resposta.create!(resposta_param)
+    end
+    respond_to do |format|
+      format.html { redirect_to show_pending_formularios_path, notice: "Formulario respondido" }
+      format.json { render json: "Formualrio respondido", status: :created }
+    end
+    rescue StandardError => e
+      render e, status: :bad_request
+  end
+
   def update
     resposta = Resposta.find(params[:id])
     resposta.update!(resposta_params)
