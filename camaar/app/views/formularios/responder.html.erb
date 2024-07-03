@@ -1,5 +1,7 @@
 <%= form_with url: "/formularios/#{@formulario.id}/responder", method: :post, model: @template do |f| %>
 
+  <%= f.hidden_field :formulario_id, value: @formulario.id %>
+
   <%= f.fields_for "respostas" do |res_form| %>
   <% @questaos.each do |questao| %>
     <%= res_form.fields_for "#{questao.id}" do |resposta_form| %>
