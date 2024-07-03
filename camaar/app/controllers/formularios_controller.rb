@@ -16,9 +16,13 @@ class FormulariosController < ApplicationController
     end
 
     def create
-        formulario = Formulario.new(formulario_params)
-        formulario.save!
-        respond_with_formulario(formulario, status: :created)
+        @formulario = Formulario.new(formulario_params)
+        @formulario.save!
+        respond_to do |format|
+            format.html { redirect_to new_formulario_path, notice: "#{@formulario.nome} created."}
+            format.json { render json: @formulario, status: :created }
+        end
+
     rescue StandardError => e
         render json: e, status: :bad_request
     end
@@ -39,6 +43,18 @@ class FormulariosController < ApplicationController
         respond_with_formulario(formulario)
     rescue StandardError => e
         render json: e, status: :not_found
+    end
+
+
+    def new
+        @formularios = Formulario.new
+    end
+
+    # idealmente, o que está nesse método era para estar no formulario#new, mas esse método já está renderizando uma view diferente, então decidi criar um método novo
+    def send_form
+        @formulario = Formulario.new
+        @turmas = Turma.includes(:materia).all();
+        @templates = Template.all();
     end
 
     def export_csv

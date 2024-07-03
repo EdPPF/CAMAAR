@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_10_164442) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_02_223702) do
   create_table "formularios", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -41,9 +41,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_10_164442) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "texto"
-    t.integer "formulario_id", null: false
     t.integer "template_id", null: false
-    t.index ["formulario_id"], name: "index_questaos_on_formulario_id"
     t.index ["template_id"], name: "index_questaos_on_template_id"
   end
 
@@ -94,7 +92,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_10_164442) do
   add_foreign_key "formularios", "turmas"
   add_foreign_key "matriculas", "turmas"
   add_foreign_key "matriculas", "users"
-  add_foreign_key "questaos", "formularios"
   add_foreign_key "questaos", "templates"
   add_foreign_key "resposta", "formularios"
   add_foreign_key "resposta", "questaos"
