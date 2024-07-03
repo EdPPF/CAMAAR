@@ -21,6 +21,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_03_200204) do
     t.index ["turma_id"], name: "index_formularios_on_turma_id"
   end
 
+  create_table "formularios_users", id: false, force: :cascade do |t|
+    t.integer "formulario_id"
+    t.integer "user_id"
+    t.index ["formulario_id"], name: "index_formularios_users_on_formulario_id"
+    t.index ["user_id"], name: "index_formularios_users_on_user_id"
+  end
+
   create_table "materia", force: :cascade do |t|
     t.string "codigo"
     t.string "nome"
@@ -86,13 +93,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_03_200204) do
     t.datetime "remember_created_at"
     t.integer "role"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-  end
-
-  create_table "formularios_users", id: false, force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "formulario_id"
-    t.index ["formulario_id"], name: "index_users_formularios_on_formulario_id"
-    t.index ["user_id"], name: "index_users_formularios_on_user_id"
   end
 
   add_foreign_key "formularios", "templates"
