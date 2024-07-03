@@ -77,7 +77,11 @@ class FormulariosController < ApplicationController
     end
 
     def show_pending
-        @formularios = Formulario.all
+        if current_user
+            @formularios = Formulario.where.not(id: current_user.formularios.select(:id))
+        else
+            redirect_to formularios_path, notice: "Um erro ocorreu"
+        end
     end
 
     def export_csv
