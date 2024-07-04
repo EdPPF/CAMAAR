@@ -140,4 +140,14 @@ RSpec.describe "Formularios", type: :request do
     end
   end
 
+  describe "envio de formularios" do
+    context "abrir pagina para criar form" do
+      it "retorna HTTP status ok" do
+        get send_form_formularios_path
+        expect(response).to be_successful
+      end
+    end
+  end
+
+
 end
