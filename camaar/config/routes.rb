@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   get "/formularios", to: "formularios#index"
 
   resources :import_materia_and_turma, only: [:create]
-
+  #resources :user, only: [:create]
   root to: "home#index"
   devise_for :users
   scope "/turmas" do
@@ -51,6 +51,7 @@ Rails.application.routes.draw do
     get "/", to: "users#index"
     get "/:id", to: "users#show"
     post "/", to: "users#create" #- obsoleto com o devise
+    post :create, to: "users#create"
     # patch "/:id", to: "users#update"
     delete "/:id", to: "users#delete"
   end

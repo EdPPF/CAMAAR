@@ -11,31 +11,40 @@ class UsersController < ApplicationController
   # end
   #
   def index
-      users = User.all
-      render json: array_serializer(users), status: :ok
+    users = User.all
+    render json: array_serializer(users), status: :ok
 #  rescue StandardError => e
 #      render json: e, status: :not_found
   end
 
   def show
-      user = User.find(params[:id])
-      render json: serializer(user), status: :ok
+    user = User.find(params[:id])
+    render json: serializer(user), status: :ok
   rescue StandardError => e
-      render json: e, status: :not_found
+    render json: e, status: :not_found
   end
 
   def create
-    class_members = JSON.parse(params[:data], symbolize_names: true) rescue nil
-    if class_members.present?
-      begin
-        import_users(class_members)
-        render json: { message: "Data imported successfully!" }, status: :created
-      rescue StandardError => e
-        render json: { message: "Error importing data: #{e.message}" }, status: :bad_request
-      end
+    if params[:file].present?
+      file = params[:file].read
+      class_members = JSON.parse(file, symbolize_names: true) rescue nil
+      if class_members.present?
+        begin
+          import_users(class_members)
+          flash[:notice] = "Dados de usuários importados com sucesso!"
+          redirect_to new_formulario_path, :notice => flash[:notice]
+        rescue StandardError => e
+          flash[:alert] = "Erro ao importar dados de usuários: #{e.message}"
+          redirect_to new_formulario_path, :alert => flash[:alert]
+        end
     else
-      render json: { message: "Invalid JSON data format." }, status: :bad_request
+      flash[:alert] = "Formato de dados JSON inválido."
+      redirect_to new_formulario_path, :alert => flash[:alert]
     end
+  else
+    flash[:alert] = "Nenhum arquivo selecionado."
+    redirect_to new_formulario_path, :alert => flash[:alert]
+  end
   end
 
 #   def update
@@ -48,11 +57,11 @@ class UsersController < ApplicationController
 
 
   def delete
-      user = User.find(params[:id])
-      user.destroy!
-      render json: user, status: :ok
+    user = User.find(params[:id])
+    user.destroy!
+    render json: user, status: :ok
   rescue StandardError => e
-      render json: e, status: :not_found
+    render json: e, status: :not_found
   end
 
   private
@@ -61,9 +70,9 @@ class UsersController < ApplicationController
   #     params.require(:user).permit(:email, :password)
   # end
 
-   def user_params
-     params.require(:user).permit(:nome, :email, :password, :curso, :matricula, :formacao, :ocupacao)
-    end
+  def user_params
+    params.require(:user).permit(:nome, :email, :password, :curso, :matricula, :formacao, :ocupacao)
+  end
 
   def serializer(user)
     UserSerializer.new.serialize_to_json(user)
@@ -73,63 +82,60 @@ class UsersController < ApplicationController
     Panko::ArraySerializer.new(users, each_serializer: UserSerializer).to_json
   end
 
-  def generate_random_password(length = 6)
-    SecureRandom.hex(length / 2).chars.map { |c| rand(2) == 0 ? c : c.chr }.join
-  end
-
-
   def import_users(class_members_data_array)
     class_members_data_array.each do |materia_data|
-
-
-
-      materia = Materia.find_or_create_by!(codigo: materia_data[:code])  # Search by code only
-
-
-
-      turma = materia.turmas.find_or_create_by!(codigo: materia_data[:classCode],
-                                                semestre: materia_data[:semester], horario: materia_data[:time])
-
-
+      materia = Materia.find_or_create_by!(codigo: materia_data[:code])
+      turma = materia.turmas.find_or_create_by!(
+        codigo: materia_data[:classCode],
+        semestre: materia_data[:semester],
+        horario: materia_data[:time]
+      )
 
       # Import dicentes (students)
-      dicente_data_array = materia_data[:dicente]
-      dicente_data_array.each do |dicente_data|
-        user = User.find_by(nome: dicente_data[:nome], email: dicente_data[:email],
-                            matricula: dicente_data[:matricula])
-        if user.blank?
-          password = generate_random_password
-          user = User.create!(nome: dicente_data[:nome], email: dicente_data[:email],
-                              matricula: dicente_data[:matricula], password: password,
-                              curso: dicente_data[:curso],
-                              formacao: dicente_data[:formacao], ocupacao: dicente_data[:ocupacao], role: :user)
-
-          #UserMailer.welcome_email(user, password).deliver_now!
-        else
-          user.update!(curso: dicente_data[:curso], formacao: dicente_data[:formacao], ocupacao: dicente_data[:ocupacao], role: :user)
-        end
-
-        # Associate user with turma through matricula
-        matricula = Matricula.find_or_create_by!(user: user, turma: turma)
+      materia_data[:dicente].each do |dicente_data|
+        user = find_or_create_user(dicente_data)
+        associate_user_with_turma(user, turma)
       end
 
       # Import docente (teacher)
-      docente_data = materia_data[:docente]
-      user_docente = User.find_by(nome: docente_data[:nome], email: docente_data[:email],
-                                  matricula: docente_data[:usuario])
-      if user_docente.blank?
-        password = generate_random_password
-        user_docente = User.create!(nome: docente_data[:nome], email: docente_data[:email],
-                                    matricula: docente_data[:usuario], password:password,
-                                    formacao: docente_data[:formacao], ocupacao: docente_data[:ocupacao], role: :user)
-      else
-        user_docente.update!(formacao: docente_data[:formacao], ocupacao: docente_data[:ocupacao], role: :user)
-      end
+      user_docente = find_or_create_user(materia_data[:docente], :user)
       # Associate user (docente) with turma through matricula
-      matricula = Matricula.find_or_create_by!(user: user_docente, turma: turma)
-
-
+      associate_user_with_turma(user_docente, turma)
     end
+  end
 
+  def find_or_create_user(user_data, role = :user)
+    user = User.find_by(
+      nome: user_data[:nome],
+      email: user_data[:email],
+      matricula: user_data[:matricula] || user_data[:usuario]
+    )
+    if user.blank?
+      password_length = 6
+      password = Devise.friendly_token.first(password_length)
+      user = User.create!(
+        nome: user_data[:nome],
+        email: user_data[:email],
+        matricula: user_data[:matricula] || user_data[:usuario],
+        password: password, password_confirmation: password,
+        curso: user_data[:curso],
+        formacao: user_data[:formacao],
+        ocupacao: user_data[:ocupacao],
+        role: role
+      )
+      # UserMailer.welcome_email(user, password).deliver_now!
+    else
+      user.update(
+        curso: user_data[:curso],
+        formacao: user_data[:formacao],
+        ocupacao: user_data[:ocupacao],
+        role: role
+      )
+    end
+    user
+  end
+
+  def associate_user_with_turma(user, turma)
+    Matricula.find_or_create_by!(user: user, turma: turma)
   end
 end

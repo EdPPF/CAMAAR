@@ -1,41 +1,47 @@
-require 'capybara/email/rspec'
+Given('que estou na página de login') do
+  visit new_user_session_path
+end
 
-Given(/^que eu estou no meu e\-mail de usuário$/) do
+When('eu seguir {string}') do |link|
+  click_link link
+end
+
+When('eu preencher {string} com {string}') do |field, value|
+  fill_in field, with: value
+end
+
+When('eu pressionar {string}') do |button|
+  click_button button
+end
+
+Then('eu devo ver {string}') do |message|
+  expect(page).to have_content(message)
+end
+
+Given('que existe um usuário com o email {string}') do |email|
   @user = FactoryBot.create(:user)
 end
 
-When(/^eu recebo o e\-mail de troca de senha corretamente$/) do
+Given('o usuário solicitou uma redefinição de senha') do
   @user.send_reset_password_instructions
 end
 
-When(/^eu clico em trocar senha$/) do
-  #open_email(@user.email)
-  current_email.click_link 'Change my password'
+When('o usuário abrir o e-mail de redefinição de senha') do
+  open_email(@user.email)
 end
 
-When(/^devo ser redirecionado a uma página de troca de senha$/) do
-  expect(page).to have_current_path(edit_user_password_path(reset_password_token: @user.reload.reset_password_token))
+When('o usuário seguir o link de redefinição de senha') do
+  visit_in_email('Alterar minha senha')
 end
 
-When(/^devo poder trocar a minha senha atual por uma nova$/) do
-  pending
+When('o usuário preencher {string} com {string}') do |field, value|
+  fill_in field, with: value
 end
 
-When(/^que eu estou em um e\-mail qualquer$/) do
-  #fill_in 'New password', with: 'newpassword'
-  #fill_in 'Confirm new password', with: 'newpassword'
-  click_button 'Change my password'
-  #expect(page).to have_content('Your password has been changed successfully. You are now signed in.')
+When('o usuário pressionar {string}') do |button|
+  click_button button
 end
 
-When(/^não tenho acessoa ao email de troca de senha$/) do
-  @user = FactoryBot.create(:user)
-end
-
-When(/^eu tentar trocar minha senha atual$/) do
-  visit edit_user_password_path(reset_password_token: 'invalidtoken')
-end
-
-When(/^deve ser exibida uma mensagem de que não é possivel trocar minha senha$/) do
-  expect(page).to have_content('Reset password token is invalid')
+Then('o usuário deve ver {string}') do |message|
+  expect(page).to have_content(message)
 end
