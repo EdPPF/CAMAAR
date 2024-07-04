@@ -140,6 +140,7 @@ RSpec.describe "Formularios", type: :request do
     end
   end
 
+
   describe "GET responder formulario" do
     let (:formulario) { create(:formulario) }
     context "mostrar formularios pendentes" do
@@ -154,6 +155,15 @@ RSpec.describe "Formularios", type: :request do
       it "retorna status 200 ok" do
         get responder_formulario_path(formulario.id)
         expect(response).to have_http_status(200)
+      end
+    end
+  end
+
+  describe "envio de formularios" do
+    context "abrir pagina para criar form" do
+      it "retorna HTTP status ok" do
+        get send_form_formularios_path
+        expect(response).to be_successful
       end
     end
   end

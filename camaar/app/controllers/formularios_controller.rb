@@ -2,23 +2,15 @@ require 'csv'
 
 class FormulariosController < ApplicationController
     def index
-        @formularios = Formulario.all
+        formularios = Formulario.all
         # mudei de render json: formularios, status: :ok para render json: formularios, status: :ok
-        respond_to do |format|
-            format.html
-            format.json { render json: @formularios }
-        end
+        respond_with_formulario(formularios)
     end
 
     def show
-        @formulario = Formulario.find(params[:id])
+        formulario = find_formulario
          # render json: formulario, status: :ok
-
-        respond_to do |format|
-            format.html
-            format.json { render json: @formulario }
-        end
-
+        respond_with_formulario(formulario)
     rescue StandardError => e
         render json: e, status: :not_found
     end
@@ -30,34 +22,29 @@ class FormulariosController < ApplicationController
             format.html { redirect_to new_formulario_path, notice: "#{@formulario.nome} created."}
             format.json { render json: @formulario, status: :created }
         end
+
     rescue StandardError => e
         render json: e, status: :bad_request
     end
 
     def update
-        @formulario = Formulario.find(params[:id])
-        if @formulario.update(formulario_params)
-            respond_to do |format|
-                format.html { redirect_to formularios_path, notice: "#{@formulario.nome} updated." }
-                format.json { render json: @formulario, status: :ok }
-            end
+        formulario = find_formulario
+        if formulario.update(formulario_params)
+            handle_success(formulario)
         else
-            flash.now[:alert] = "#{@formulario.nome} could not be updated: " + @formulario.errors.full_messages.join(", ")
-            render 'edit', status: :bad_request
+            handle_failure(formulario)
         end
     end
 
     def destroy
-        @formulario = Formulario.find(params[:id])
-        @formulario.destroy!
+        formulario = find_formulario
+        formulario.destroy!
         # render json: { message: "Formulario deleted." }, status: :ok
-        respond_to do |format|
-            format.html 
-            format.json { render json: @formulario, status: :ok }
-        end
+        respond_with_formulario(formulario)
     rescue StandardError => e
         render json: e, status: :not_found
     end
+
 
     def new
         @formularios = Formulario.new
@@ -85,10 +72,10 @@ class FormulariosController < ApplicationController
     end
 
     def export_csv
-        @formularios = Formulario.all
+        formularios = Formulario.all
 
         respond_to do |format|
-          format.csv { send_data generate_csv(@formularios), filename: "formularios-#{Date.today}.csv" }
+          format.csv { send_data generate_csv(formularios), filename: "formularios-#{Date.today}.csv" }
         end
       end
 
@@ -105,6 +92,30 @@ class FormulariosController < ApplicationController
           formularios.each do |formulario|
             csv << [formulario.id, formulario.nome, formulario.created_at, formulario.updated_at]
           end
+        end
     end
-end
+
+    def find_formulario
+        Formulario.find(params[:id])
+    end
+
+    def respond_with_formulario(formulario, status: :ok)
+        respond_to do |format|
+            format.html
+            format.json { render json: formulario, status: status}
+        end
+    end
+
+    # Similar ao respond_with_formulario, mas com a diferença de que ele redireciona para a página de formularios
+    def handle_success(formulario)
+        respond_to do |format|
+            format.html { redirect_to formularios_path, notice: "#{formulario.nome} updated." }
+            format.json { render json: formulario, status: :ok }
+        end
+    end
+
+    def handle_failure(formulario)
+        flash.now[:alert] = "#{formulario.nome} could not be updated: " + formulario.errors.full_messages.join(", ")
+        render 'edit', status: :bad_request
+    end
 end
