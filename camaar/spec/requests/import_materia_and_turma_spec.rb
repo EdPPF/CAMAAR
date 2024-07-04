@@ -10,26 +10,36 @@
 
   describe "POST #create" do
     context "with valid JSON data" do
-      it "imports data successfully" do
-
+      before do
         post :create, params: { data: data }, as: :json
+      end
 
+      it "returns a created status" do
         expect(response).to have_http_status(:created)
         expect(response.parsed_body).to eq({ "message" => "Data imported successfully!" })
+      end
 
-        # Additional assertions for data creation
-        expect(Materia.count).to eq(3)
-        expect(Materia.first.codigo).to eq("CIC0097")
-        expect(Materia.first.turmas.first.codigo).to eq("TA")
+      describe "data creation" do
+        it "creates the expected number of Materias" do
+          expect(Materia.count).to eq(3)
+        end
+
+        it "stes the correct codigo for the first Materia" do
+          expect(Materia.first.codigo).to eq("CIC0097")
+        end
+        it "associates the correct turma with the first Materia" do
+          expect(Materia.first.turmas.first.codigo).to eq("TA")
+        end
       end
     end
 
     context "with invalid JSON data" do
       let(:invalid_json) do
-        { data: { code: "MAT101", name: "Mathematics 1" } } # Missing class data
+        { data: { code: "MAT101", name: "Mathematics 1" }.to_json } # Missing class data
       end
 
       it "returns bad request for invalid format" do
+        request.headers['Content-Type'] = 'application/json' # Set the request content type to JSON
         post :create, params: invalid_json
 
         expect(response).to have_http_status(:bad_request)
