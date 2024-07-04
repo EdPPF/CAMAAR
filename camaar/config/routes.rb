@@ -58,9 +58,12 @@ Rails.application.routes.draw do
   resources :materias
   resources :templates
   resources :formularios do
-    collection do
-      get :send_form
+    member do
       get :export_csv
+    end
+    collection do
+      get :resultados
+      get :send_form
     end
   end
 
