@@ -96,28 +96,131 @@
       background-color: #007BFF;
       color: white;
     }
+    .importar-dados {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .importar-dados h2 {
+      margin-top: 0;
+      font-size: 1.2em;
+    }
+    .importar-dados .field {
+      margin-bottom: 15px;
+    }
+    .importar-dados label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .importar-dados input[type="file"] {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 100%;
+    }
+    .importar-dados .actions {
+      text-align: right;
+    }
+    .importar-dados .actions input[type="submit"] {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .importar-dados .actions input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+    .notice, .alert {
+      padding: 10px;
+      margin-top: 15px;
+      border-radius: 5px;
+    }
+    .notice {
+      color: green;
+      background-color: #f0fff0;
+      border: 1px solid green;
+    }
+    .alert {
+      color: red;
+      background-color: #fffafa;
+      border: 1px solid red;
+    }
   </style>
 </head>
 <body>
     <!-- Menu Lateral -->
-    <div class="sidebar">
-        <h2>Menu</h2>
-        <ul>
-        <a class="back" href="<%= root_path %>">Voltar</a>
-        </ul>
-    </div>
+  <div class="sidebar">
+      <h2>Menu</h2>
+      <ul>
+      <a class="back" href="<%= root_path %>">Voltar</a>
+      </ul>
+  </div>
 
     <!-- Conteúdo Principal -->
-    <div class="content">
-        <div class="gerenciamento-menu">
-            <h2>Menu de Gerenciamento</h2>
-            <ul>
-                <li><%= link_to 'Importar Dados', new_formulario_path %></li>
-                <li><%= link_to 'Editar Templates', templates_path %></li>
-                <li><%= link_to 'Enviar Formulários', send_form_formularios_path %></li>
-                <li><%= link_to 'Resultados', export_csv_formularios_path(format: :csv) %></li>
+  <div class="content">
+    <div class="gerenciamento-menu">
+          <h2>Menu de Gerenciamento</h2>
+          <ul>
+            <li><%= link_to 'Importar Dados', new_formulario_path %></li>
+            <li><%= link_to 'Editar Templates', templates_path %></li>
+            <li><%= link_to 'Enviar Formulários', send_form_formularios_path %></li>
+            <li><%= link_to 'Resultados', export_csv_formularios_path(format: :csv) %></li>
+                <!-- <li>
+                  <form action="<%= import_materia_and_turma_index_path %>" method="post">
+                  
+                  <input type="file" name="data" accept=".json" required>
+                    <button type="submit">Importar Dados de materia e turma</button>
+                  </form>
+                </li>
+                <li>
+                <form action="<%= create_path %>" method="post">
+                <input type="file" name="data" accept=".json" required>
+                <button type="submit">Importar Usuários</button>
+                </form>
+                </li> 
+                -->
             </ul>
-        </div>
+          <h2>Importar Dados</h2>
+
+<div class="importar-dados">
+  <%= form_with url: import_materia_and_turma_index_path, method: :post, local: true, multipart: true do %>
+    <div class="field">
+      <label for="file">Matérias e Turmas</label>
+      <%= file_field_tag :file, accept: 'application/json' %>
     </div>
+    <div class="actions">
+      <%= submit_tag "Importar Matéria e Turma" %>
+    </div>
+  <% end %>
+</div>
+
+<div class="importar-dados">
+  <%= form_with url: create_path, method: :post, local: true, multipart: true do %>
+    <div class="field">
+      <label for="file">Usuários</label>
+      <%= file_field_tag :file, accept: 'application/json' %>
+    </div>
+    <div class="actions">
+      <%= submit_tag "Importar Usuários" %>
+    </div>
+  <% end %>
+</div>
+
+<% if flash[:notice] %>
+  <p class="notice"><%= flash[:notice] %></p>
+<% elsif flash[:alert] %>
+  <p class="alert"><%= flash[:alert] %></p>
+<% end %>
+
+    </div>
+  </div>
+
+
 </body>
 </html>
