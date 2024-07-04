@@ -94,6 +94,7 @@
         <h1>Você é admin!</h1>
       <% else %>
         <h1>Você é aluno!</h1>
+        <%= link_to "Formularios a responder", show_pending_formularios_path, class: "button" %>
       <% end %>
       <% if @materia.any? %>
         <h2>Featured Subjects</h2>

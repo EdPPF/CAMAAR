@@ -59,7 +59,12 @@ Rails.application.routes.draw do
   resources :materias
   resources :templates
   resources :formularios do
+    member do
+      get :responder
+      post "responder", to: "respostas#bulk_create"
+    end
     collection do
+      get :show_pending
       get :send_form
       get :export_csv
     end
