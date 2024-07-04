@@ -4,6 +4,10 @@ class QuestoesController < ApplicationController
     render json: questoes, status: :ok
   end
 
+  def new
+    @questao = Questao.new({template_id: params[:id]})
+  end
+
   def show
     questao = Questao.find(params[:id])
     render json: questao, status: :ok
@@ -14,7 +18,10 @@ class QuestoesController < ApplicationController
   def create
     questao = Questao.new(questao_params)
     questao.save!
-    render json: questao, status: :created
+    respond_to do |format|
+      format.html { redirect_to template_path(questao.template_id), notice: "Questao criada" }
+      format.json { render json: questao, status: :created }
+    end
   rescue StandardError => e
     render json: e, status: :bad_request
   end

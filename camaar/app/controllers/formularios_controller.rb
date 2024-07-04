@@ -57,8 +57,22 @@ class FormulariosController < ApplicationController
         @templates = Template.all();
     end
 
+
     def resultados
         @formularios = Formulario.all
+      
+    def responder
+        @formulario = Formulario.find(params[:id])
+        @template = @formulario.template
+        @questaos = @template.questaos
+    end
+
+    def show_pending
+        if current_user
+            @formularios = Formulario.where.not(id: current_user.formularios.select(:id))
+        else
+            redirect_to formularios_path, notice: "Um erro ocorreu"
+        end
     end
 
     def export_csv

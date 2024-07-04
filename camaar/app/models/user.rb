@@ -18,6 +18,8 @@ class User < ApplicationRecord
   has_many :matriculas
   has_many :turmas, through: :matriculas
 
+  has_and_belongs_to_many :formularios
+
   # Add the role attribute (replace with your desired role types)
   enum role: [:admin, :user]  # This defines roles as 'admin' or 'user'
   after_initialize :set_default_role, :if => :new_record?

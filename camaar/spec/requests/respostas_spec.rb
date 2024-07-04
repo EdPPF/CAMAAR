@@ -158,4 +158,23 @@ RSpec.describe "Respostas", type: :request do
       end
     end
   end
+
+  describe "Criação de muitas respostas" do
+    context "quando a formulario foi preenchido corretamente" do
+      let(:template) { create(:template) }
+      let(:questao) { create(:questao) }
+      let(:formulario) { create(:formulario) }
+      let(:bulk_create_params) do
+        { template: { formulario_id: formulario.id, respostas: { "1": {questao_id: questao.id, formulario_id: formulario.id, texto: "oi"}}}}
+      end
+
+      it "retorna stauts 201 criado" do # falta dar um jeito de logar o usuario
+        user = create(:user)
+        sign_in user
+        post responder_formulario_path(formulario.id), params: bulk_create_params, as: :json
+        expect(response).to have_http_status(201)
+        puts response.body
+      end
+    end
+  end
 end
