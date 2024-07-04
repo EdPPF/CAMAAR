@@ -1,8 +1,27 @@
+##
+# Responsável por gerenciar as requisições referentes a Resposta.
+
 class RespostasController < ApplicationController
+
+  ##
+  # Lista todas as respostas cadastradas no sistema.
+  #
+  # Retorno:: renderiza um JSON com todas as respostas e status 200.
+
   def index
     respostas = Resposta.all
     render json: respostas, status: :ok
   end
+
+
+  ##
+  # Mostra uma resposta específica.
+  #
+  # Parâmetros::
+  # id: int - o id da resposta a ser mostrada.
+  #
+  # Retorno:: renderiza um JSON com a resposta e status 200.
+  # - Se a resposta não existir, renderiza um JSON com a mensagem de erro e status 404.
 
   def show
     resposta = Resposta.find(params[:id])
@@ -10,6 +29,16 @@ class RespostasController < ApplicationController
   rescue StandardError => e
     render json: e, status: :not_found
   end
+
+
+  ##
+  # Cria uma nova resposta.
+  #
+  # Parâmetros::
+  # resposta: Hash - os atributos da resposta a ser criada.
+  #
+  # Retorno:: renderiza um JSON com a resposta criada e status 201.
+  # - Se os atributos da resposta forem inválidos, renderiza um JSON com a mensagem de erro e status 400.
 
   def create
     resposta = Resposta.new(resposta_params)
@@ -19,6 +48,17 @@ class RespostasController < ApplicationController
     render json: e, status: :bad_request
   end
 
+
+  ##
+  # Atualiza uma resposta específica.
+  #
+  # Parâmetros::
+  # id: int - o id da resposta a ser atualizada.
+  # resposta: Hash - os atributos da resposta a ser atualizada.
+  #
+  # Retorno:: renderiza um JSON com a resposta atualizada e status 200.
+  # - Se a resposta não existir, renderiza um JSON com a mensagem de erro e status 404.
+
   def update
     resposta = Resposta.find(params[:id])
     resposta.update!(resposta_params)
@@ -26,6 +66,16 @@ class RespostasController < ApplicationController
   rescue StandardError => e
     render json: e, status: :bad_request
   end
+
+
+  ##
+  # Deleta uma resposta específica.
+  #
+  # Parâmetros::
+  # id: int - o id da resposta a ser deletada.
+  #
+  # Retorno:: renderiza um JSON com a mensagem de sucesso e status 200.
+  # - Se a resposta não existir, renderiza um JSON com a mensagem de erro e status 404.
 
   def delete
     resposta = Resposta.find(params[:id])
