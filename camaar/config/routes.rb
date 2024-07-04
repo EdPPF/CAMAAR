@@ -73,7 +73,7 @@ Rails.application.routes.draw do
       get :resultados
       get :show_pending
       get :send_form
-    enD
+    end
     end
   end
 
