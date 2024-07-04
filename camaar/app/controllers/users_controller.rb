@@ -82,10 +82,6 @@ class UsersController < ApplicationController
     Panko::ArraySerializer.new(users, each_serializer: UserSerializer).to_json
   end
 
-  def generate_random_password(length = 6)
-    SecureRandom.hex(length / 2).chars.map { |c| rand(2) == 0 ? c : c.chr }.join
-  end
-
 
   def import_users(class_members_data_array)
     class_members_data_array.each do |materia_data|
@@ -109,7 +105,7 @@ class UsersController < ApplicationController
 
           #UserMailer.welcome_email(user, password).deliver_now!
         else
-          user.update!(curso: dicente_data[:curso], formacao: dicente_data[:formacao], ocupacao: dicente_data[:ocupacao], role: :user)
+          user.update(curso: dicente_data[:curso], formacao: dicente_data[:formacao], ocupacao: dicente_data[:ocupacao], role: :user)
         end
 
         # Associate user with turma through matricula
@@ -127,7 +123,7 @@ class UsersController < ApplicationController
                                     matricula: docente_data[:usuario], password: password, password_confirmation: password,
                                     formacao: docente_data[:formacao], ocupacao: docente_data[:ocupacao], role: :user)
       else
-        user_docente.update!(formacao: docente_data[:formacao], ocupacao: docente_data[:ocupacao], role: :user)
+        user_docente.update(formacao: docente_data[:formacao], ocupacao: docente_data[:ocupacao], role: :user)
       end
       # Associate user (docente) with turma through matricula
       matricula = Matricula.find_or_create_by!(user: user_docente, turma: turma)
