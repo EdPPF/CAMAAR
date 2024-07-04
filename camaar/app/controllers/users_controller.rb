@@ -25,17 +25,26 @@ class UsersController < ApplicationController
   end
 
   def create
-    class_members = JSON.parse(params[:data], symbolize_names: true) rescue nil
-    if class_members.present?
-      begin
-        import_users(class_members)
-        render json: { message: "Data imported successfully!" }, status: :created
-      rescue StandardError => e
-        render json: { message: "Error importing data: #{e.message}" }, status: :bad_request
-      end
+    if params[:file].present?
+      file = params[:file].read
+      class_members = JSON.parse(file, symbolize_names: true) rescue nil
+      if class_members.present?
+        begin
+          import_users(class_members)
+          flash[:notice] = "Dados de usuários importados com sucesso!"
+          redirect_to new_formulario_path, :notice => flash[:notice]
+        rescue StandardError => e
+          flash[:alert] = "Erro ao importar dados de usuários: #{e.message}"
+          redirect_to new_formulario_path, :alert => flash[:alert]
+        end
     else
-      render json: { message: "Invalid JSON data format." }, status: :bad_request
+      flash[:alert] = "Formato de dados JSON inválido."
+      redirect_to new_formulario_path, :alert => flash[:alert]
     end
+  else
+    flash[:alert] = "Nenhum arquivo selecionado."
+    redirect_to new_formulario_path, :alert => flash[:alert]
+  end
   end
 
 #   def update
@@ -73,10 +82,6 @@ class UsersController < ApplicationController
     Panko::ArraySerializer.new(users, each_serializer: UserSerializer).to_json
   end
 
-  def generate_random_password(length = 6)
-    SecureRandom.hex(length / 2).chars.map { |c| rand(2) == 0 ? c : c.chr }.join
-  end
-
   def import_users(class_members_data_array)
     class_members_data_array.each do |materia_data|
       materia = Materia.find_or_create_by!(codigo: materia_data[:code])
@@ -106,12 +111,13 @@ class UsersController < ApplicationController
       matricula: user_data[:matricula] || user_data[:usuario]
     )
     if user.blank?
-      password = generate_random_password
+      password_length = 6
+      password = Devise.friendly_token.first(password_length)
       user = User.create!(
         nome: user_data[:nome],
         email: user_data[:email],
         matricula: user_data[:matricula] || user_data[:usuario],
-        password: password,
+        password: password, password_confirmation: password,
         curso: user_data[:curso],
         formacao: user_data[:formacao],
         ocupacao: user_data[:ocupacao],
@@ -119,7 +125,7 @@ class UsersController < ApplicationController
       )
       # UserMailer.welcome_email(user, password).deliver_now!
     else
-      user.update!(
+      user.update(
         curso: user_data[:curso],
         formacao: user_data[:formacao],
         ocupacao: user_data[:ocupacao],

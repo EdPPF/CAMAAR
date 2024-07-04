@@ -1,16 +1,28 @@
 class ImportMateriaAndTurmaController < ApplicationController
   def create
-    materia_data = parse_json_data(params[:data])
-    if materia_data.is_a?(Array) && materia_data.all? { |item| item.is_a?(Hash) }
-      import_materias(materia_data)
-      render json: { message: "Data imported successfully!" }, status: :created
+
+      if params[:file].present?
+         file = params[:file].read
+          materia_data = JSON.parse(file, symbolize_names: true) rescue nil
+
+      if materia_data.present?
+        begin
+          import_materias(materia_data)
+          flash[:notice] = "Dados importados com sucesso!"
+          redirect_to new_formulario_path, :notice => flash[:notice]
+          #render json: { message: "Data imported successfully!" }, status: :created
+        rescue StandardError => e
+          flash[:alert] = "Erro ao importar dados: #{e.message}"
+          redirect_to new_formulario_path, :alert => flash[:alert]
+        end
+      else
+        flash[:alert] = "Formato de dados JSON inválido."
+        redirect_to new_formulario_path, :alert => flash[:alert]
+      end
     else
-      render json: { message: "Invalid JSON data format." }, status: :bad_request
+        flash[:alert] = "Nenhum arquivo selecionado."
+        redirect_to new_formulario_path, :alert => flash[:alert]
     end
-  rescue JSON::ParserError
-    render json: { message: "Invalid JSON data format." }, status: :bad_request
-  rescue StandardError => e
-    render json: { message: "Error importing data: #{e.message}" }, status: :bad_request
   end
 
   private

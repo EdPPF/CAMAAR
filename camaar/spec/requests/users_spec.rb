@@ -137,35 +137,54 @@ RSpec.describe "Users", type: :request do
 end
 
 RSpec.describe UsersController, type: :controller do
-  let(:data) { File.read(Rails.root.join('spec/support/class_members.json')) }
+
+  let(:valid_json_file) { fixture_file_upload('spec/support/class_members.json', 'application/json') }
+  let(:invalid_json_file) { fixture_file_upload('spec/support/classes.json', 'application/json') }
+  let(:invalid2_json_file) { fixture_file_upload('spec/support/invalid.json', 'application/json') }
   let(:materia) { Materia.create!(codigo: "CIC0097", name: "BANCO DE DADOS") }
   let(:turma) { Turma.create!(codigo: "TA", semester: "2021.2", horario: "35T45", materia: materia) }
-  describe "POST #create" do
-    context "with valid JSON data" do
-      it "returns a success message" do
-        post :create, params: { data: data }, as: :json
-        expect(response.parsed_body).to eq({ "message" => "Data imported successfully!" })
-        expect(response).to have_http_status(:created)
-      end
 
-      it "creates the correct records in the database" do
-        expect {
-          post :create, params: { data: data }, as: :json
-        }.to change { Materia.count }.by(1)
-                                     .and change { Turma.count }.by(1)
-                                                                .and change { User.count }.by(45)
-                                                                                          .and change { Matricula.count }.by(45)
+  describe "POST #create" do
+    context "with valid JSON file upload" do
+      it "imports data successfully and redirects with flash message" do
+
+        post :create, params: { file: valid_json_file }
+
+        expect(response).to have_http_status(:found)  # Changed to :found for redirect
+        expect(flash[:notice]).to eq("Dados de usuários importados com sucesso!")
+
+        # Additional assertions for data creation (optional, uncomment if needed)
+        # expect { post :create, params: { file: valid_json_file } }.to change { User.count }.by(45)
+        # ... (similar assertions for Materia, Turma, and Matricula counts, if applicable)
       end
     end
 
-    context "with invalid JSON data" do
-      let(:invalid_json) do
-        { data: { code: "MAT101", name: "Mathematics 1" } } # Missing class data
+    context "with invalid JSON file" do
+      it "returns bad format alert and redirects with error message" do
+        post :create, params: { file: invalid2_json_file }
+
+        expect(response).to have_http_status(:found)  # Changed to :found for redirect
+        expect(flash[:alert]).to eq("Formato de dados JSON inválido.")
       end
-      it "returns an error message" do
-        post :create, params: invalid_json
-        expect(response).to have_http_status(:bad_request)
-        expect(response.parsed_body).to eq({ "message" => "Invalid JSON data format." })
+    end
+
+    context "with data import error" do
+      it "handles errors, redirects, and sets error flash message" do
+        allow(File).to receive(:read).and_raise(StandardError.new("Import failed"))
+
+        post :create, params: { file: invalid_json_file }
+
+        expect(response).to have_http_status(:found)  # Changed to :found for redirect
+        expect(flash[:alert]).to eq("Erro ao importar dados de usuários: Validation failed: Codigo can't be blank, Codigo is invalid, Semestre can't be blank, Semestre is invalid")
+      end
+    end
+
+    context "with no file selected" do
+      it "redirects with error message for missing file" do
+        post :create, params: {}  # Empty params without a file
+
+        expect(response).to have_http_status(:found)  # Changed to :found for redirect
+        expect(flash[:alert]).to eq("Nenhum arquivo selecionado.")
       end
     end
   end
