@@ -41,6 +41,16 @@ Para verificar os testes do Rspec, basta utilizar dentro da raiz do projeto o co
 rspec
 ```
 
+### Documentação
+
+A documentação é feita com a gema `rdoc`. Rode o comando
+
+```bash
+rdoc .\app\controllers\*
+```
+
+navege à pasta `doc\` e abra o arquivo `index.html` para acessar a documentação.
+
 ## Política de Branching
 
 Cada sprint deste trabalho possui dificuldades e necessidades diferentes.
