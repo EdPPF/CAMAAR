@@ -1,15 +1,13 @@
+##
+# Responsável por controlar as requisições referentes a User.
+
 class UsersController < ApplicationController
-  # def login
-  #   user = User.find_by(email: login_params[:email])
-  #   if user.valid_password?(login_params[:password])
-  #       render json: user, status: :ok
-  #   else
-  #       head :unauthorized
-  #   end
-  # rescue StandardError => e
-  #     head :unauthorized
-  # end
+
+  ##
+  # Lista todos os usuários cadastrados no sistema.
   #
+  # Retorno:: renderiza um JSON com todos os usuários e status 200.
+
   def index
     users = User.all
     render json: array_serializer(users), status: :ok
@@ -17,12 +15,31 @@ class UsersController < ApplicationController
 #      render json: e, status: :not_found
   end
 
+
+  ##
+  # Mostra um usuário específico.
+  #
+  # Parâmetros::
+  # id: int - o id do usuário a ser mostrado.
+  #
+  # Retorno:: renderiza um JSON com o usuário e status 200.
+  # - Se o usuário não existir, renderiza um JSON com a mensagem de erro e status 404.
+
   def show
     user = User.find(params[:id])
     render json: serializer(user), status: :ok
   rescue StandardError => e
     render json: e, status: :not_found
   end
+
+
+  ##
+  # Cria novos usuários a partir de um arquivo JSON.
+  #
+  # Parâmetros::
+  # file: JSON - o arquivo JSON com os dados dos usuários a serem importados.
+  #
+  # Retorno:: redireciona para a página de formulários com uma mensagem de sucesso ou erro.
 
   def create
     if params[:file].present?
@@ -41,10 +58,10 @@ class UsersController < ApplicationController
       flash[:alert] = "Formato de dados JSON inválido."
       redirect_to new_formulario_path, :alert => flash[:alert]
     end
-  else
-    flash[:alert] = "Nenhum arquivo selecionado."
-    redirect_to new_formulario_path, :alert => flash[:alert]
-  end
+    else
+      flash[:alert] = "Nenhum arquivo selecionado."
+      redirect_to new_formulario_path, :alert => flash[:alert]
+    end
   end
 
 #   def update
@@ -55,6 +72,15 @@ class UsersController < ApplicationController
 #       render json: e, status: :bad_request
 #   end
 
+
+  ##
+  # Deleta um usuário específico.
+  #
+  # Parâmetros::
+  # id: int - o id do usuário a ser deletado.
+  #
+  # Retorno:: renderiza um JSON com a mensagem de sucesso e status 200.
+  # - Se o usuário não existir, renderiza um JSON com a mensagem de erro e status 404.
 
   def delete
     user = User.find(params[:id])
