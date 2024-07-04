@@ -1,8 +1,27 @@
+##
+# Responsável por gerenciar as requisições referentes a Questao.
+
 class QuestoesController < ApplicationController
+
+  ##
+  # Lista todas as questões.
+  #
+  # Retorno:: renderiza um JSON com todas as questões e status 200.
+
   def index
     questoes = Questao.all
     render json: questoes, status: :ok
   end
+
+
+  ##
+  # Mostra uma questão específica.
+  #
+  # Parâmetros::
+  # id: int - o id da questão a ser mostrada.
+  #
+  # Retorno:: renderiza um JSON com a questão e status 200.
+  # - Se a questão não existir, renderiza um JSON com a mensagem de erro e status 404.
 
   def show
     questao = Questao.find(params[:id])
@@ -10,6 +29,16 @@ class QuestoesController < ApplicationController
   rescue StandardError => e
     render json: e, status: :not_found
   end
+
+
+  ##
+  # Cria uma nova questão.
+  #
+  # Parâmetros::
+  # questao: Hash - os atributos da questão a ser criada.
+  #
+  # Retorno:: renderiza um JSON com a questão criada e status 201.
+  # - Se os atributos da questão forem inválidos, renderiza um JSON com a mensagem de erro e status 400.
 
   def create
     questao = Questao.new(questao_params)
@@ -19,6 +48,17 @@ class QuestoesController < ApplicationController
     render json: e, status: :bad_request
   end
 
+
+  ##
+  # Atualiza uma questão específica.
+  #
+  # Parâmetros::
+  # id: int - o id da questão a ser atualizada.
+  # questao: Hash - os atributos da questão a ser atualizada.
+  #
+  # Retorno:: renderiza um JSON com a questão atualizada e status 200.
+  # - Se a questão não existir, renderiza um JSON com a mensagem de erro e status 404.
+
   def update
     questao = Questao.find(params[:id])
     questao.update!(questao_params)
@@ -26,6 +66,16 @@ class QuestoesController < ApplicationController
   rescue StandardError => e
     render json: e, status: :bad_request
   end
+
+
+  ##
+  # Deleta uma questão específica.
+  #
+  # Parâmetros::
+  # id: int - o id da questão a ser deletada.
+  #
+  # Retorno:: renderiza um JSON com a mensagem de sucesso e status 200.
+  # - Se a questão não existir, renderiza um JSON com a mensagem de erro e status 404.
 
   def delete
     questao = Questao.find(params[:id])
