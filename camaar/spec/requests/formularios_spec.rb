@@ -132,11 +132,22 @@ RSpec.describe "Formularios", type: :request do
     end
   end
 
-  describe "GET /export_csv" do
-    it "retorna HTTP status ok" do
-      get export_csv_formularios_path, params: {format: :csv}
-      puts response.body
-      expect(response).to be_successful
+  describe "Exportar resultados" do
+    let (:template) { create(:template) }
+    let (:turma) { create(:turma) }
+    let (:formulario) { create(:formulario, nome:"Avaliação A", turma:turma, template:template) }
+
+    context "GET /resultados" do
+      it "retorna HTTP status ok" do
+        get resultados_formularios_path
+        expect(response).to be_successful
+      end
+    end
+    context "GET /export_csv" do
+      it "retorna HTTP status ok" do
+        get export_csv_formulario_path(formulario.id), params: {format: :csv}
+        expect(response).to be_successful
+      end
     end
   end
 

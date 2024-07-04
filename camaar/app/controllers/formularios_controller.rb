@@ -79,8 +79,8 @@ class FormulariosController < ApplicationController
       template = formulario.template
       questaos = template.questaos
       respostas = formulario.respostas
-      if (respostas.nil? || questaos.nil?)
-        
+      if (respostas.empty? || questaos.empty?)
+        return "Formulario sem respostas"
       else
         CSV.generate(headers: true) do |csv|
           headers = questaos.pluck(:texto)
