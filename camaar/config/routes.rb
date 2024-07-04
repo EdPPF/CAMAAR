@@ -57,7 +57,12 @@ Rails.application.routes.draw do
   end
 
   resources :materias
-  resources :templates
+  resources :templates do
+    member do
+      get "nova_questao", to: "questoes#new"
+      post "nova_questao", to: "questoes#create"
+    end
+  end
   resources :formularios do
     member do
       get :responder

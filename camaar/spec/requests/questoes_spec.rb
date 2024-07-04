@@ -70,7 +70,7 @@ RSpec.describe "Questoes", type: :request do
 
     context "quando os parâmetros são válidos" do
       before do
-        post "/questoes", params: { questao: questao_params }
+        post "/questoes", params: { questao: questao_params }, as: :json
       end
 
       it "retorna status 201 Created" do

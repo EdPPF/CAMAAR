@@ -7,6 +7,7 @@ class TemplatesController < ApplicationController
   end
 
   def show # mostra o item de forma detalhada
+    @questaos = @template.questaos
   end
 
   def new # abre uma nova instancia
