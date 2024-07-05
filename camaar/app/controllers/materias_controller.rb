@@ -1,4 +1,15 @@
+##
+# Responsável por gerenciar as matérias cadastradas no sistema.
+
 class MateriasController < ApplicationController
+
+    ##
+    # Lista todas as matérias.
+    #
+    # Retorno:: depende do formato da requisição:
+    # - HTML: renderiza a view associada.
+    # - JSON: retorna um JSON com todas as matérias.
+
     def index
         materias = Materia.all
 
@@ -8,6 +19,17 @@ class MateriasController < ApplicationController
         end
     end
 
+
+    ##
+    # Mostra uma matéria específica.
+    #
+    # Parâmetros::
+    # id: int - o id da matéria a ser mostrada.
+    #
+    # Retorno:: depende do formato da requisição:
+    # - HTML: renderiza a view associada.
+    # - JSON: retorna um JSON com a matéria.
+
     def show
         materia = Materia.find(params[:id])
 
@@ -16,6 +38,33 @@ class MateriasController < ApplicationController
             format.json { render json: materia }
         end
     end
+
+
+    ##
+    # Renderiza a view de criação de uma nova matéria.
+
+    def new
+        @materia = Materia.new
+    end
+
+
+    ##
+    # Renderiza a view de edição de uma matéria.
+
+    def edit
+        @materia = Materia.find(params[:id])
+    end
+
+
+    ##
+    # Cria uma nova matéria.
+    #
+    # Parâmetros::
+    # materia: Hash - os atributos da matéria a ser criada.
+    #
+    # Retorno:: depende do formato da requisição:
+    # - HTML: redireciona para a página de matérias e mostra uma mensagem de sucesso.
+    # - Se os atributos da matéria forem inválidos, renderiza um JSON com erro 422.
 
     def create
         materia = Materia.new(materia_params)
@@ -28,6 +77,16 @@ class MateriasController < ApplicationController
         end
     end
 
+
+    ##
+    # Atualiza uma matéria específica.
+    #
+    # Parâmetros::
+    # id: int - o id da matéria a ser atualizada.
+    #
+    # Retorno:: redireciona para a página de matérias e mostra uma mensagem de sucesso.
+    # - Se os atributos da matéria forem inválidos, renderiza um JSON com erro 422.
+
     def update
         materia = Materia.find(params[:id])
         nome_materia = materia.nome
@@ -38,6 +97,15 @@ class MateriasController < ApplicationController
             render 'edit', status: :unprocessable_entity
         end
     end
+
+
+    ##
+    # Deleta uma matéria específica.
+    #
+    # Parâmetros::
+    # id: int - o id da matéria a ser deletada.
+    #
+    # Retorno:: redireciona para a página de matérias e mostra uma mensagem de sucesso.
 
     def destroy
         materia = Materia.find(params[:id])

@@ -1,9 +1,22 @@
-class ImportMateriaAndTurmaController < ApplicationController
-  def create
+##
+# Importa Materia e Turma de dados de um JSON.
+#
+# O JSON deve ser enviado no corpo da requisição com a chave 'data'.
 
-      if params[:file].present?
-         file = params[:file].read
-          materia_data = JSON.parse(file, symbolize_names: true) rescue nil
+class ImportMateriaAndTurmaController < ApplicationController
+
+  ##
+  # Cria uma nova Materia e Turma a partir de um JSON.
+  #
+  # Parâmetros::
+  # file: JSON - o JSON com os dados da Materia e Turma.
+  #
+  # Retorno:: redireciona para a página de formulários e mostra uma mensagem de sucesso ou erro.
+
+  def create
+    if params[:file].present?
+      file = params[:file].read
+        materia_data = JSON.parse(file, symbolize_names: true) rescue nil
 
       if materia_data.present?
         begin
@@ -18,7 +31,7 @@ class ImportMateriaAndTurmaController < ApplicationController
       else
         flash[:alert] = "Formato de dados JSON inválido."
         redirect_to new_formulario_path, :alert => flash[:alert]
-      end
+    end
     else
         flash[:alert] = "Nenhum arquivo selecionado."
         redirect_to new_formulario_path, :alert => flash[:alert]

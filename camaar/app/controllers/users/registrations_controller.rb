@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
+##
+# Processo de cadastro de usuário com autenticação pelo Devise.
+
 class Users::RegistrationsController < Devise::RegistrationsController
+
+  ##
+  # Cria um novo usuário e envia um email com a senha temporária.
+  #
+  # Se o usuário for salvo com sucesso, redireciona para a página de login.
+  # Caso contrário, renderiza a página de cadastro com os erros.
+  #
+  # Caso o usuário não seja autenticável, redireciona para a página de inatividade.
+
   def create
     build_resource(sign_up_params)
     set_temporary_password_for_resource(resource)

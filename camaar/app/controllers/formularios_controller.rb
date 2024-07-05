@@ -1,11 +1,33 @@
 require 'csv'
 
+##
+# Responsável por controlar as ações CRUD de Formulários
+
 class FormulariosController < ApplicationController
+
+    ##
+    # Lista todos os formulários.
+    #
+    # Retorno:: depende do formato da requisição:
+    # - HTML: renderiza a view associada.
+    # - JSON: retorna um JSON com todos os formulários.
+
     def index
         formularios = Formulario.all
-        # mudei de render json: formularios, status: :ok para render json: formularios, status: :ok
         respond_with_formulario(formularios)
     end
+
+
+    ##
+    # Mostra um formulário específico.
+    #
+    # Parâmetros::
+    # id: int - o id do formulário a ser mostrado.
+    #
+    # Retorno:: depende do formato da requisição:
+    # - HTML: renderiza a view associada.
+    # - JSON: retorna um JSON com o formulário.
+    # - Se o formulário não for encontrado, renderiza um JSON com erro 404.
 
     def show
         formulario = find_formulario
@@ -15,6 +37,18 @@ class FormulariosController < ApplicationController
         render json: e, status: :not_found
     end
 
+
+    ##
+    # Cria um novo formulário.
+    #
+    # Parâmetros::
+    # formulario: Hash - os atributos do formulário a ser criado.
+    #
+    # Retorno:: depende do formato da requisição:
+    # - HTML: redireciona para a página de formulários e mostra uma mensagem de sucesso.
+    # - JSON: retorna um JSON com o formulário criado.
+    # - Se os atributos do formulário forem inválidos, renderiza um JSON com erro 400
+
     def create
         @formulario = Formulario.new(formulario_params)
         @formulario.save!
@@ -22,10 +56,22 @@ class FormulariosController < ApplicationController
             format.html { redirect_to new_formulario_path, notice: "#{@formulario.nome} created."}
             format.json { render json: @formulario, status: :created }
         end
-
     rescue StandardError => e
         render json: e, status: :bad_request
     end
+
+
+    ##
+    # Atualiza um formulário específico.
+    #
+    # Parâmetros::
+    # id: int - o id do formulário a ser atualizado.
+    # formulario: Hash - os atributos do formulário a ser atualizado.
+    #
+    # Retorno:: depende do formato da requisição:
+    # - HTML: redireciona para a página de formulários e mostra uma mensagem de sucesso.
+    # - JSON: retorna um JSON com o formulário atualizado.
+    # - Se os atributos do formulário forem inválidos, renderiza um JSON com erro 400
 
     def update
         formulario = find_formulario
@@ -35,6 +81,18 @@ class FormulariosController < ApplicationController
             handle_failure(formulario)
         end
     end
+
+
+    ##
+    # Deleta um formulário específico.
+    #
+    # Parâmetros::
+    # id: int - o id do formulário a ser deletado.
+    #
+    # Retorno:: depende do formato da requisição:
+    # - HTML: redireciona para a página de formulários e mostra uma mensagem de sucesso.
+    # - JSON: retorna um JSON com uma mensagem de sucesso.
+    # - Se o formulário não for encontrado, renderiza um JSON com erro 404.
 
     def destroy
         formulario = find_formulario
@@ -46,27 +104,48 @@ class FormulariosController < ApplicationController
     end
 
 
+    ##
+    # Renderiza a view de criação de formulários.
+
     def new
         @formularios = Formulario.new
     end
 
-    # idealmente, o que está nesse método era para estar no formulario#new, mas esse método já está renderizando uma view diferente, então decidi criar um método novo
+
+    ##
+    # Obtem as informações necessárias para renderizar a view associada ao envio de um formulário.
+
     def send_form
+        # idealmente, o que está nesse método era para estar no formulario#new, mas esse método já está renderizando uma view diferente, então decidi criar um método novo
         @formulario = Formulario.new
         @turmas = Turma.includes(:materia).all();
         @templates = Template.all();
     end
 
 
+    ##
+    # Obtem todos os formulários existentes no sistema.
+
     def resultados
         @formularios = Formulario.all
     end
+
+
+    ##
+    # Prepara as informações necessárias para renderizar a view associada ao envio de um formulário.
 
     def responder
         @formulario = Formulario.find(params[:id])
         @template = @formulario.template
         @questaos = @template.questaos
     end
+
+
+    ##
+    # Obtem os formulários pendentes, ou seja, os formulários que o usuário ainda não respondeu.
+    #
+    # Retorno:: renderiza a view associada.
+    # - Se o usuário não estiver logado, redireciona para a página de formulários com uma mensagem de erro.
 
     def show_pending
         if current_user
@@ -76,9 +155,15 @@ class FormulariosController < ApplicationController
         end
     end
 
+
+    ##
+    # Exporta os formulários para um arquivo CSV.
+    #
+    # Retorno:: um arquivo CSV com todos os formulários.
+    # - Se não for possível gerar o arquivo, renderiza um JSON com erro 500.
+
     def export_csv
         formulario = Formulario.find(params[:id])
-
         respond_to do |format|
           format.csv { send_data generate_csv(formulario), filename: "formularios-#{Date.today}.csv" }
         end
