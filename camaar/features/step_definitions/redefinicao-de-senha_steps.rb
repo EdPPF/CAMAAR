@@ -2,8 +2,8 @@ Given('que estou na página de login') do
   visit new_user_session_path
 end
 
-When('eu seguir {string}') do |link|
-  click_link link
+When('eu seguir Forgot your password?') do
+  click_link 'Forgot your password?'
 end
 
 When('eu preencher {string} com {string}') do |field, value|

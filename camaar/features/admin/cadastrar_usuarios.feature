@@ -12,12 +12,12 @@ Funcionalidade: Cadastrar Usuários no Sistema
     # Ou o admin simplesmente cadastra todos os novos usuários mesmo?
         Dado que eu estou na página de configuração # Novamente, não tenho certeza de qual página será essa
         E que novos dados foram importados do SIGAA para a base de dados
-        Quando eu clico no botão "Cadastrar Usuários"
+        Quando eu clico no botão "Importar Usuários"
         Então eu devo ver uma mensagem de confirmação de cadastro
 
     # Sad Path
     Cenário: Usuários já Cadastrados
         Dado que eu estou na página de configuração
         E que os dados importados do SIGAA já estão na base de dados
-        Quando eu clico no botão "Cadastrar Usuários"
+        Quando eu clico no botão "Importar Usuários"
         Então eu devo ver uma mensagem de erro informando que os usuários já estão cadastrados

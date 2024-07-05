@@ -1,31 +1,27 @@
-When(/^que estou na tela de configurção \# Não tenho certeza de qual tela será aqui$/) do
-  pending
+# features/step_definitions/import_steps.rb
+
+Given(/^que estou na tela de configuração$/) do
+  visit new_formulario_path
 end
 
-When(/^o sistema deve importar os dados de turmas, matérias e participantes do SIGAA$/) do
-  pending
+When(/^eu clicar no botão "Importar Matéria e Turma"$/) do
+  attach_file('file', Rails.root.join('spec/support/class_members.json'))
+  click_button 'Importar Matéria e Turma'
 end
 
-When(/^exibir uma mensagem de sucesso$/) do
-  pending
+Then(/^o sistema deve importar os dados de turmas, matérias e participantes do SIGAA$/) do
+  expect(page).to have_content("Dados importados com sucesso!")
 end
 
-When(/^que estou na tela de configurção \# \?$/) do
-  pending
+Then(/^o sistema deve exibir uma mensagem de sucesso$/) do
+  expect(page).to have_content("Dados importados com sucesso!")
 end
 
 When(/^o sistema não conseguir importar os dados$/) do
-  pending
+  attach_file('file', Rails.root.join('spec/support/invalid.json'))
+  click_button 'Importar Matéria e Turma'
 end
 
-When(/^o sistema deve exibir uma mensagem de erro$/) do
-  pending
-end
-
-When(/^os dados já estiverem atualizados$/) do
-  pending
-end
-
-When(/^o sistema deve exibir uma mensagem informando que os dados são os mais recentes$/) do
-  pending
+Then(/^o sistema deve exibir uma mensagem de erro$/) do
+  expect(page).to have_content("Formato de dados JSON inválido.")
 end
