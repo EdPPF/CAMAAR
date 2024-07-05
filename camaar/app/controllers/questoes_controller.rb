@@ -13,11 +13,18 @@ class QuestoesController < ApplicationController
     render json: questoes, status: :ok
   end
 
+
+  ##
+  # Renderiza a view de criação de uma nova questão.
+  #
+  # Parâmetros::
+  # id: int - o id do template ao qual a questão pertence.
+
   def new
     @questao = Questao.new({template_id: params[:id]})
   end
-  
-  
+
+
   ##
   # Mostra uma questão específica.
   #
@@ -26,7 +33,7 @@ class QuestoesController < ApplicationController
   #
   # Retorno:: renderiza um JSON com a questão e status 200.
   # - Se a questão não existir, renderiza um JSON com a mensagem de erro e status 404.
-  
+
   def show
     questao = Questao.find(params[:id])
     render json: questao, status: :ok
