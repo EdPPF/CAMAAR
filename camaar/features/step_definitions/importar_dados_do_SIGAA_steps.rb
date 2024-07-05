@@ -5,12 +5,10 @@ Given(/^que estou na tela de configuração$/) do
 end
 
 When(/^eu clicar no botão "Importar Matéria e Turma"$/) do
-  attach_file('file', Rails.root.join('spec/support/class_members.json'))
-  click_button 'Importar Matéria e Turma'
-end
-
-Then(/^o sistema deve importar os dados de turmas, matérias e participantes do SIGAA$/) do
-  expect(page).to have_content("Dados importados com sucesso!")
+  within('form[action="' + import_materia_and_turma_index_path + '"]') do
+    attach_file('file', Rails.root.join('spec/support/classes.json'))
+    click_button 'Importar Matéria e Turma'
+  end
 end
 
 Then(/^o sistema deve exibir uma mensagem de sucesso$/) do
@@ -18,8 +16,10 @@ Then(/^o sistema deve exibir uma mensagem de sucesso$/) do
 end
 
 When(/^o sistema não conseguir importar os dados$/) do
-  attach_file('file', Rails.root.join('spec/support/invalid.json'))
-  click_button 'Importar Matéria e Turma'
+  within('form[action="' + import_materia_and_turma_index_path + '"]') do
+    attach_file('file', Rails.root.join('spec/support/invalid.json'))
+    click_button 'Importar Matéria e Turma'
+  end
 end
 
 Then(/^o sistema deve exibir uma mensagem de erro$/) do

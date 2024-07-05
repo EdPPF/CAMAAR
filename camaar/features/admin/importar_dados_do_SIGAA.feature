@@ -9,12 +9,11 @@ Funcionalidade: Importar Dados do SIGAA
     Cenário: Importar Dados do SIGAA
         Dado que estou na tela de configuração 
         Quando eu clicar no botão "Importar Matéria e Turma"
-        Então o sistema deve importar os dados de turmas, matérias e participantes do SIGAA
-        E exibir uma mensagem de sucesso
+        Então o sistema deve exibir uma mensagem de sucesso
 
     # Sad Path
     Cenário: Erro ao Importar Dados
-        Dado que estou na tela de configuração # ?
+        Dado que estou na tela de configuração
         Quando eu clicar no botão "Importar Matéria e Turma"
         E o sistema não conseguir importar os dados
         Então o sistema deve exibir uma mensagem de erro
