@@ -60,7 +60,8 @@ class FormulariosController < ApplicationController
 
     def resultados
         @formularios = Formulario.all
-      
+    end
+
     def responder
         @formulario = Formulario.find(params[:id])
         @template = @formulario.template
@@ -81,7 +82,7 @@ class FormulariosController < ApplicationController
         respond_to do |format|
           format.csv { send_data generate_csv(formulario), filename: "formularios-#{Date.today}.csv" }
         end
-      end
+    end
 
     private
 

@@ -74,7 +74,6 @@ Rails.application.routes.draw do
       get :show_pending
       get :send_form
     end
-    end
   end
 
 end
