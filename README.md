@@ -1,4 +1,5 @@
 # CAMAAR
+
 Sistema para avaliação de atividades acadêmicas remotas do CIC
 
 rails db:migrate,
@@ -7,3 +8,6 @@ rspec,
 rails db:seed,
 rails c >> User.user,
 rails s >> porta normal
+
+Para rodar testes do cucumber:
+bundle exec cucumber --guess
