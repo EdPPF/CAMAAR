@@ -49,6 +49,17 @@ class RespostasController < ApplicationController
   end
 
 
+  ##
+  # Cria várias respostas com base nos parâmetros fornecidos, associa-as a um objeto Formulario e responde à solicitação.
+  #
+  # Parâmetros::
+  # - template: Hash - os atributos do template a ser criado.
+  # - formulario_id: int - o id do formulário ao qual as respostas pertencem.
+  # - respostas: Hash - as respostas a serem criadas.
+  #
+  # Retorno:: renderiza um JSON com a mensagem de sucesso e status 201.
+  # - Se os atributos das respostas forem inválidos, renderiza um JSON com a mensagem de erro e status 400.
+
   def bulk_create
     if current_user
       @formulario = Formulario.find(params.require(:template).require(:formulario_id))
@@ -64,7 +75,7 @@ class RespostasController < ApplicationController
     end
   end
 
-  
+
   ##
   # Atualiza uma resposta específica.
   #
@@ -74,7 +85,7 @@ class RespostasController < ApplicationController
   #
   # Retorno:: renderiza um JSON com a resposta atualizada e status 200.
   # - Se a resposta não existir, renderiza um JSON com a mensagem de erro e status 404.
-  
+
   def update
     resposta = Resposta.find(params[:id])
     resposta.update!(resposta_params)
