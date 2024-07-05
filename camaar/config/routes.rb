@@ -65,13 +65,14 @@ Rails.application.routes.draw do
   end
   resources :formularios do
     member do
+      get :export_csv
       get :responder
       post "responder", to: "respostas#bulk_create"
     end
     collection do
+      get :resultados
       get :show_pending
       get :send_form
-      get :export_csv
     end
   end
 
