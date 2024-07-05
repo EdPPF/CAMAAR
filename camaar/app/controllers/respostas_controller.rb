@@ -49,6 +49,22 @@ class RespostasController < ApplicationController
   end
 
 
+  def bulk_create
+    if current_user
+      @formulario = Formulario.find(params.require(:template).require(:formulario_id))
+      params.require(:template).require(:respostas).each do |key, resposta_param|
+        resposta_param = resposta_param.permit(:questao_id, :formulario_id, :texto)
+        Resposta.create!(resposta_param)
+      end
+      current_user.formularios << @formulario
+      respond_to do |format|
+        format.html { redirect_to show_pending_formularios_path, notice: "Formulario respondido" }
+        format.json { render json: "Formualrio respondido", status: :created }
+      end
+    end
+  end
+
+  
   ##
   # Atualiza uma resposta específica.
   #
@@ -58,7 +74,7 @@ class RespostasController < ApplicationController
   #
   # Retorno:: renderiza um JSON com a resposta atualizada e status 200.
   # - Se a resposta não existir, renderiza um JSON com a mensagem de erro e status 404.
-
+  
   def update
     resposta = Resposta.find(params[:id])
     resposta.update!(resposta_params)

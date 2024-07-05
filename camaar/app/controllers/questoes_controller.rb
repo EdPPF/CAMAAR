@@ -13,7 +13,11 @@ class QuestoesController < ApplicationController
     render json: questoes, status: :ok
   end
 
-
+  def new
+    @questao = Questao.new({template_id: params[:id]})
+  end
+  
+  
   ##
   # Mostra uma questão específica.
   #
@@ -22,7 +26,7 @@ class QuestoesController < ApplicationController
   #
   # Retorno:: renderiza um JSON com a questão e status 200.
   # - Se a questão não existir, renderiza um JSON com a mensagem de erro e status 404.
-
+  
   def show
     questao = Questao.find(params[:id])
     render json: questao, status: :ok
@@ -43,7 +47,10 @@ class QuestoesController < ApplicationController
   def create
     questao = Questao.new(questao_params)
     questao.save!
-    render json: questao, status: :created
+    respond_to do |format|
+      format.html { redirect_to template_path(questao.template_id), notice: "Questao criada" }
+      format.json { render json: questao, status: :created }
+    end
   rescue StandardError => e
     render json: e, status: :bad_request
   end

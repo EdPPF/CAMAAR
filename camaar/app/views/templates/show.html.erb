@@ -70,10 +70,20 @@
         <li>Nome: <%= @template.nome %></li>
         <li>Criado em: <%= @template.created_at.strftime('%d/%m/%Y %H:%M') %></li>
         <li>Última atualização: <%= @template.updated_at.strftime('%d/%m/%Y %H:%M') %></li>
+        <li>Questões: <ul id="details"> 
+          <% if @questaos.nil? %>
+            Não há Questões
+          <% else %>
+          <% @questaos.each do |questao| %>
+            <li> Id: <%= questao.id %>, Pergunta: <%= questao.texto %> </li>
+          <% end %>
+          <% end %>
+          </ul></li>
       </ul>
     </div>
 
     <%= link_to 'Editar o nome deste template', edit_template_path(@template), class: 'btn' %>
+    <%= link_to 'Criar nova questão para esse template', nova_questao_template_path(@template), class: 'btn' %>
     <%= link_to 'Voltar para templates', templates_path, class: 'btn btn-primary' %>
   </main>
 </body>

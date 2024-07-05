@@ -19,9 +19,10 @@ class TemplatesController < ApplicationController
 
 
   ##
-  # TODO: Mostra um template específico.
-  def show # mostra o item de forma detalhada
-    # TODO
+  # Mostra um template específico.
+  
+  def show
+    @questaos = @template.questaos
   end
 
 

@@ -57,11 +57,22 @@ Rails.application.routes.draw do
   end
 
   resources :materias
-  resources :templates
+  resources :templates do
+    member do
+      get "nova_questao", to: "questoes#new"
+      post "nova_questao", to: "questoes#create"
+    end
+  end
   resources :formularios do
-    collection do
-      get :send_form
+    member do
       get :export_csv
+      get :responder
+      post "responder", to: "respostas#bulk_create"
+    end
+    collection do
+      get :resultados
+      get :show_pending
+      get :send_form
     end
   end
 

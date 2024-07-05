@@ -122,17 +122,35 @@ class FormulariosController < ApplicationController
         @templates = Template.all();
     end
 
+    def resultados
+        @formularios = Formulario.all
+    end
 
+    def responder
+        @formulario = Formulario.find(params[:id])
+        @template = @formulario.template
+        @questaos = @template.questaos
+    end
+
+    def show_pending
+        if current_user
+            @formularios = Formulario.where.not(id: current_user.formularios.select(:id))
+        else
+            redirect_to formularios_path, notice: "Um erro ocorreu"
+        end
+    end
+
+  
     ##
     # Exporta os formulários para um arquivo CSV.
     #
     # Retorno:: um arquivo CSV com todos os formulários.
     # - Se não for possível gerar o arquivo, renderiza um JSON com erro 500.
-
+  
     def export_csv
-        formularios = Formulario.all
+        formulario = Formulario.find(params[:id])
         respond_to do |format|
-          format.csv { send_data generate_csv(formularios), filename: "formularios-#{Date.today}.csv" }
+          format.csv { send_data generate_csv(formulario), filename: "formularios-#{Date.today}.csv" }
         end
     end
 
@@ -142,14 +160,32 @@ class FormulariosController < ApplicationController
         params.require(:formulario).permit(:nome, :turma_id, :template_id)
     end
 
-    def generate_csv(formularios)
+    def generate_csv(formulario)
+      template = formulario.template
+      questaos = template.questaos
+      respostas = formulario.respostas
+      if (respostas.empty? || questaos.empty?)
+        return "Formulario sem respostas"
+      else
         CSV.generate(headers: true) do |csv|
-          csv << ['ID', 'Nome', 'Criado em', 'Atualizado em']
+          headers = questaos.pluck(:texto)
+          csv << headers
+          respostas = respostas.group_by(&:questao_id)
 
-          formularios.each do |formulario|
-            csv << [formulario.id, formulario.nome, formulario.created_at, formulario.updated_at]
+          max_respostas_count = respostas.values.map(&:size).max
+
+          (0...max_respostas_count).each do |index|
+            row = []
+            questaos.each do |questao|
+              respostas_questao = respostas[questao.id] || []
+              resposta = respostas_questao[index]
+              row << (resposta ? resposta.texto : "")
+            end
+            csv << row
           end
         end
+
+      end
     end
 
     def find_formulario

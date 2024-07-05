@@ -1,0 +1,8 @@
+<% @formularios.each do |formulario| %>
+    Nome: <%= formulario.nome %>
+    Id: <%= formulario.id %>
+    <%= link_to "Exportar resultado", export_csv_formulario_path(formulario, format: :csv) %>
+    <br>
+<% end %>
+
+<%= link_to 'Voltar', new_formulario_path %>

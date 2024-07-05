@@ -132,11 +132,41 @@ RSpec.describe "Formularios", type: :request do
     end
   end
 
-  describe "GET /export_csv" do
-    it "retorna HTTP status ok" do
-      get export_csv_formularios_path, params: {format: :csv}
-      puts response.body
-      expect(response).to be_successful
+  describe "Exportar resultados" do
+    let (:template) { create(:template) }
+    let (:turma) { create(:turma) }
+    let (:formulario) { create(:formulario, nome:"Avaliação A", turma:turma, template:template) }
+
+    context "GET /resultados" do
+      it "retorna HTTP status ok" do
+        get resultados_formularios_path
+        expect(response).to be_successful
+      end
+    end
+    context "GET /export_csv" do
+      it "retorna HTTP status ok" do
+        get export_csv_formulario_path(formulario.id), params: {format: :csv}
+        expect(response).to be_successful
+      end
+    end
+  end
+
+
+  describe "GET responder formulario" do
+    let (:formulario) { create(:formulario) }
+    context "mostrar formularios pendentes" do
+      it "retorna status 200 ok" do
+        user = create(:user)
+        sign_in user
+        get show_pending_formularios_path
+        expect(response).to have_http_status(200)
+      end
+    end
+    context "pagina de responder formulario" do
+      it "retorna status 200 ok" do
+        get responder_formulario_path(formulario.id)
+        expect(response).to have_http_status(200)
+      end
     end
   end
 
