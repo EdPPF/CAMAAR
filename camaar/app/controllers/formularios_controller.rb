@@ -113,7 +113,7 @@ class FormulariosController < ApplicationController
 
 
     ##
-    # Renderiza a view de edição de um formulário específico.
+    # Obtem as informações necessárias para renderizar a view associada ao envio de um formulário.
 
     def send_form
         # idealmente, o que está nesse método era para estar no formulario#new, mas esse método já está renderizando uma view diferente, então decidi criar um método novo
@@ -122,15 +122,30 @@ class FormulariosController < ApplicationController
         @templates = Template.all();
     end
 
+
+    ##
+    # Obtem todos os formulários existentes no sistema.
+
     def resultados
         @formularios = Formulario.all
     end
+
+
+    ##
+    # Prepara as informações necessárias para renderizar a view associada ao envio de um formulário.
 
     def responder
         @formulario = Formulario.find(params[:id])
         @template = @formulario.template
         @questaos = @template.questaos
     end
+
+
+    ##
+    # Obtem os formulários pendentes, ou seja, os formulários que o usuário ainda não respondeu.
+    #
+    # Retorno:: renderiza a view associada.
+    # - Se o usuário não estiver logado, redireciona para a página de formulários com uma mensagem de erro.
 
     def show_pending
         if current_user
@@ -140,13 +155,13 @@ class FormulariosController < ApplicationController
         end
     end
 
-  
+
     ##
     # Exporta os formulários para um arquivo CSV.
     #
     # Retorno:: um arquivo CSV com todos os formulários.
     # - Se não for possível gerar o arquivo, renderiza um JSON com erro 500.
-  
+
     def export_csv
         formulario = Formulario.find(params[:id])
         respond_to do |format|
