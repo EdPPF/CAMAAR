@@ -19,8 +19,8 @@ class TemplatesController < ApplicationController
 
 
   ##
-  # Mostra um template específico.
-  
+  # Obtem um template específico e suas questões.
+
   def show
     @questaos = @template.questaos
   end
