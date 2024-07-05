@@ -1,6 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe "Formularios", type: :request do
+  describe "GET #new" do
+    it "assigns a new Formulario to @formulario" do
+      get formularios_path
+      expect(response).to be_successful
+    end
+  end
   describe "GET /" do
     # Nome, Turma, Template
     let (:template) { create(:template) }
@@ -160,6 +166,13 @@ RSpec.describe "Formularios", type: :request do
         sign_in user
         get show_pending_formularios_path
         expect(response).to have_http_status(200)
+      end
+    end
+    context "usuario nao esta logado entao nao da para ver os formularios pendentes" do
+      it "retorna status nao processado" do
+        get show_pending_formularios_path
+        expect(response).to redirect_to(formularios_path)
+        expect(flash[:notice]).to eq("Um erro ocorreu")
       end
     end
     context "pagina de responder formulario" do
