@@ -1,27 +1,28 @@
-When(/^que eu estou na página de configuração \# Novamente, não tenho certeza de qual página será essa$/) do
-  pending
+# features/step_definitions/cadastrar_usuarios_steps.rb
+
+Dado(/^que eu estou na página de configuração$/) do
+  visit new_formulario_path
 end
 
-When(/^que novos dados foram importados do SIGAA para a base de dados$/) do
-  pending
+Dado(/^recebo dado válido$/) do
+  @file_path = Rails.root.join('spec/support/class_members.json')
 end
 
-When(/^eu clico no botão "([^"]*)"$/) do |arg|
-  pending
+Dado(/^recebo dado inválido$/) do
+  @file_path = Rails.root.join('spec/support/invalid.json')
 end
 
-When(/^eu devo ver uma mensagem de confirmação de cadastro$/) do
-  pending
+Quando(/^eu clico no botão "Importar Usuários"$/) do
+  within('form[action="' + create_path + '"]') do
+    attach_file('file', @file_path)
+    click_button 'Importar Usuários'
+  end
 end
 
-When(/^que eu estou na página de configuração$/) do
-  pending
+Então(/^eu devo ver uma mensagem de confirmação de cadastro$/) do
+  expect(page).to have_content("Dados de usuários importados com sucesso!")
 end
 
-When(/^que os dados importados do SIGAA já estão na base de dados$/) do
-  pending
-end
-
-When(/^eu devo ver uma mensagem de erro informando que os usuários já estão cadastrados$/) do
-  pending
+Então(/^eu devo ver uma mensagem de erro informando que os usuários não estão cadastrados$/) do
+  expect(page).to have_content("Formato de dados JSON inválido.")
 end
