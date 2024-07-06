@@ -62,3 +62,19 @@ Do sprint 2 em diante, onde é feito o desenvolvimento da aplicação em si, ser
 A partir da branch do sprint, cada membro fará uma branch própria para o desenvolvimento da funcionalidade da qual é responsável. Ao finalizar uma tarefa, deve ser aberto um pull request para a branch do sprint.
 
 ![branching](lib/assets/branching.jpg)
+
+## Troubleshooting
+
+Caso os testes do `rspec` ou aplicativo após usar `rails server` estejam apresentando erro, tente os seguintes passos:
+
+```bash
+rails db:drop:_unsafe RAILS_ENV=test
+
+rails db:create RAILS_ENV=test
+
+rails db:migrate RAILS_ENV=test
+ou
+rails db:migrate
+```
+
+E então rode o comando (`rspec` ou `rails server`) novamente.
